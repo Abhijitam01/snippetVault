@@ -1,0 +1,51 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Snippet {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  code        String
+  language    String
+  tags        Tag[]
+  category    Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  categoryId  String?
+  notes       String?
+  resources   String?  // JSON array of URLs
+  isFavorite  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([language])
+  @@index([isFavorite])
+  @@index([categoryId])
+}
+
+model Tag {
+  id        String    @id @default(uuid())
+  name      String    @unique
+  color     String?
+  snippets  Snippet[]
+  createdAt DateTime  @default(now())
+
+  @@index([name])
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  description String?
+  icon        String?   // Emoji or icon name
+  snippets    Snippet[]
+  createdAt   DateTime  @default(now())
+
+  @@index([name])
+}
