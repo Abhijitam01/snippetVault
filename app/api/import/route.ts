@@ -1,8 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { getUserFromRequest } from '@/lib/middleware/auth';
+import { generateShortCode } from '@/lib/shortcode';
 
 export async function POST(request: NextRequest) {
   try {
+    // Require authentication
+    const currentUser = await getUserFromRequest(request);
+    if (!currentUser) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const { snippets } = body;
 
@@ -52,6 +63,22 @@ export async function POST(request: NextRequest) {
           categoryId = category.id;
         }
 
+        // Generate unique short code
+        let shortCode = generateShortCode();
+        let attempts = 0;
+        while (attempts < 10) {
+          const existing = await prisma.snippet.findUnique({
+            where: { shortCode },
+          });
+          if (!existing) break;
+          shortCode = generateShortCode();
+          attempts++;
+        }
+
+        if (attempts >= 10) {
+          throw new Error('Failed to generate unique short code');
+        }
+
         const snippet = await prisma.snippet.create({
           data: {
             title: snippetData.title || 'Untitled',
@@ -64,6 +91,9 @@ export async function POST(request: NextRequest) {
               ? JSON.stringify(snippetData.resources)
               : null,
             isFavorite: snippetData.isFavorite || false,
+            userId: currentUser.userId,
+            shortCode,
+            visibility: snippetData.visibility || 'public',
             tags: {
               connect: tagConnections,
             },

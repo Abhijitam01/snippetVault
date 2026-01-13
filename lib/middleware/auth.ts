@@ -32,7 +32,7 @@ export async function getUserFromRequest(request: NextRequest): Promise<AuthUser
 
     // If no token in header, try cookies
     if (!token) {
-      const cookieStore = cookies();
+      const cookieStore = await cookies();
       token = cookieStore.get('auth-token')?.value || null;
     }
 
