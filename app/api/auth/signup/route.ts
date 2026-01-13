@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { hashPassword } from '@/lib/auth';
 import { z } from 'zod';
+import { initializeUserSubscription } from '@/lib/features';
 
 const signupSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -48,6 +49,9 @@ export async function POST(request: NextRequest) {
         name: true,
       },
     });
+
+    // Initialize free tier subscription and usage tracking
+    await initializeUserSubscription(user.id);
 
     return NextResponse.json(
       { message: 'User created successfully', user },

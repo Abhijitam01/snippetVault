@@ -1,9 +1,30 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { getUserFromRequest } from '@/lib/middleware/auth';
+import { checkExport, trackExport } from '@/lib/middleware/usage';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    // Require authentication
+    const currentUser = await getUserFromRequest(request);
+    if (!currentUser) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    // Check export limits
+    const exportCheck = await checkExport(currentUser.userId);
+    if (!exportCheck.allowed) {
+      return exportCheck.response!;
+    }
+
+    // Only export current user's snippets
     const snippets = await prisma.snippet.findMany({
+      where: {
+        userId: currentUser.userId,
+      },
       include: {
         tags: true,
         category: true,
@@ -30,6 +51,9 @@ export async function GET() {
         updatedAt: snippet.updatedAt.toISOString(),
       })),
     };
+
+    // Track export for usage limits
+    await trackExport(currentUser.userId);
 
     return NextResponse.json(exportData, {
       headers: {

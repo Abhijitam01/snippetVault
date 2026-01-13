@@ -4,6 +4,7 @@ import { createSnippetSchema } from '@/lib/validations';
 import { ZodError } from 'zod';
 import { getUserFromRequest } from '@/lib/middleware/auth';
 import { generateShortCode } from '@/lib/shortcode';
+import { checkSnippetCreation, trackSnippetCreation, checkPrivateSnippets } from '@/lib/middleware/usage';
 
 export async function GET(request: NextRequest) {
   try {
@@ -85,6 +86,20 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = createSnippetSchema.parse(body);
 
+    // Check subscription limits before creating snippet
+    const usageCheck = await checkSnippetCreation(currentUser.userId);
+    if (!usageCheck.allowed) {
+      return usageCheck.response!;
+    }
+
+    // Check if user can create private snippets
+    if (validatedData.visibility === 'private') {
+      const privateCheck = await checkPrivateSnippets(currentUser.userId);
+      if (!privateCheck.allowed) {
+        return privateCheck.response!;
+      }
+    }
+
     // Generate unique short code
     let shortCode = generateShortCode();
     let attempts = 0;
@@ -142,6 +157,9 @@ export async function POST(request: NextRequest) {
         },
       },
     });
+
+    // Track snippet creation for usage limits
+    await trackSnippetCreation(currentUser.userId);
 
     return NextResponse.json(snippet, { status: 201 });
   } catch (error) {

@@ -3,6 +3,8 @@ import { prisma } from '@/lib/prisma';
 import { updateSnippetSchema } from '@/lib/validations';
 import { ZodError } from 'zod';
 import { getUserFromRequest, getAccessibleSnippet } from '@/lib/middleware/auth';
+import { checkPrivateSnippets } from '@/lib/middleware/usage';
+import { decrementSnippetCount } from '@/lib/features';
 
 export async function GET(
   request: NextRequest,
@@ -75,6 +77,14 @@ export async function PUT(
         { error: 'Not authorized to modify this snippet' },
         { status: 403 }
       );
+    }
+
+    // Check if user can set visibility to private
+    if (validatedData.visibility === 'private' && existing.visibility !== 'private') {
+      const privateCheck = await checkPrivateSnippets(currentUser.userId);
+      if (!privateCheck.allowed) {
+        return privateCheck.response!;
+      }
     }
 
     const updateData: {
@@ -182,6 +192,9 @@ export async function DELETE(
     await prisma.snippet.delete({
       where: { id: params.id },
     });
+
+    // Decrement snippet count for usage tracking
+    await decrementSnippetCount(currentUser.userId);
 
     return NextResponse.json({ message: 'Snippet deleted successfully' });
   } catch (error) {
