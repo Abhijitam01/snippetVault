@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Snippet {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   title       String
   description String?
   code        String
@@ -18,22 +18,22 @@ model Snippet {
   categoryId  String?
   notes       String?
   resources   String?
-  isFavorite  Boolean  @default(false)
-  
+  isFavorite  Boolean   @default(false)
+
   // Sharing features
   userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  visibility  String   @default("public") // 'public', 'private', 'unlisted'
-  shortCode   String   @unique
-  viewCount   Int      @default(0)
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  visibility  String  @default("public") // 'public', 'private', 'unlisted'
+  shortCode   String  @unique
+  viewCount   Int     @default(0)
   forkedFrom  String?
-  forkedCount Int      @default(0)
-  
+  forkedCount Int     @default(0)
+
   likes              Like[]
   collectionSnippets CollectionSnippet[]
-  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([language])
   @@index([isFavorite])
@@ -65,24 +65,26 @@ model Category {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  password  String
-  phone     String?  @unique
-  name      String?
-  
+  id       String  @id @default(uuid())
+  email    String  @unique
+  password String
+  phone    String? @unique
+  name     String?
+
   // Profile fields
-  username  String?  @unique
-  bio       String?
-  avatar    String?
-  website   String?
-  githubUrl String?
+  username   String? @unique
+  bio        String?
+  avatar     String?
+  website    String?
+  githubUrl  String?
   twitterUrl String?
-  
-  snippets    Snippet[]
-  likes       Like[]
-  collections Collection[]
-  
+
+  snippets      Snippet[]
+  likes         Like[]
+  collections   Collection[]
+  subscription  Subscription?
+  usageTracking UsageTracking?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -105,15 +107,15 @@ model Like {
 }
 
 model Collection {
-  id          String   @id @default(uuid())
+  id          String              @id @default(uuid())
   userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User                @relation(fields: [userId], references: [id], onDelete: Cascade)
   name        String
   description String?
-  isPublic    Boolean  @default(true)
+  isPublic    Boolean             @default(true)
   snippets    CollectionSnippet[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
 
   @@index([userId])
 }
@@ -129,4 +131,58 @@ model CollectionSnippet {
   @@unique([collectionId, snippetId])
   @@index([collectionId])
   @@index([snippetId])
+}
+
+model Subscription {
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Subscription tier: 'free', 'pro', 'team', 'enterprise'
+  tier String @default("free")
+
+  // Subscription status: 'active', 'canceled', 'past_due', 'trialing'
+  status String @default("active")
+
+  // Billing
+  billingPeriod      String? // 'monthly', 'yearly'
+  currentPeriodStart DateTime?
+  currentPeriodEnd   DateTime?
+  cancelAtPeriodEnd  Boolean   @default(false)
+  trialEndsAt        DateTime?
+
+  // Stripe integration
+  stripeCustomerId     String? @unique
+  stripeSubscriptionId String? @unique
+  stripePriceId        String?
+
+  // Metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([tier])
+  @@index([status])
+  @@index([stripeCustomerId])
+  @@index([stripeSubscriptionId])
+}
+
+model UsageTracking {
+  id     String @id @default(uuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Current usage counts
+  snippetCount  Int @default(0)
+  apiCallsCount Int @default(0)
+  exportCount   Int @default(0)
+
+  // Reset tracking
+  lastApiReset    DateTime @default(now())
+  lastExportReset DateTime @default(now())
+
+  // Metadata
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
 }
