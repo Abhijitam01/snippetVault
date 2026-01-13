@@ -20,14 +20,13 @@ export async function GET(request: NextRequest) {
     } = {};
 
     // Text search in title, description, code, and notes
-    // SQLite doesn't support mode: 'insensitive', but contains works case-insensitively for most cases
     if (query && query.trim()) {
       const searchQuery = query.trim();
       where.OR = [
-        { title: { contains: searchQuery } },
-        { description: { contains: searchQuery } },
-        { code: { contains: searchQuery } },
-        { notes: { contains: searchQuery } },
+        { title: { contains: searchQuery, mode: 'insensitive' } },
+        { description: { contains: searchQuery, mode: 'insensitive' } },
+        { code: { contains: searchQuery, mode: 'insensitive' } },
+        { notes: { contains: searchQuery, mode: 'insensitive' } },
       ];
     }
 
