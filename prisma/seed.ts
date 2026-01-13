@@ -5,40 +5,11 @@ const prisma = new PrismaClient();
 
 async function main() {
   // Clear existing data
-  await prisma.collectionSnippet.deleteMany();
-  await prisma.like.deleteMany();
-  await prisma.collection.deleteMany();
   await prisma.snippet.deleteMany();
   await prisma.tag.deleteMany();
-  await prisma.category.deleteMany();
   await prisma.user.deleteMany();
 
   console.log('✅ Cleared existing data');
-
-  // Create default categories
-  await prisma.category.create({
-    data: {
-      name: 'Web Development',
-      description: 'Frontend and backend web development snippets',
-      icon: '🌐',
-    },
-  });
-
-  await prisma.category.create({
-    data: {
-      name: 'Algorithms',
-      description: 'Data structures and algorithms',
-      icon: '🧮',
-    },
-  });
-
-  await prisma.category.create({
-    data: {
-      name: 'DevOps',
-      description: 'Docker, CI/CD, deployment scripts',
-      icon: '🚀',
-    },
-  });
 
   // Create default tags
   await prisma.tag.create({

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useAuth } from '@/lib/hooks/useAuth';
 import StatsCard from '@/components/ui/StatsCard';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 import { cn } from '@/lib/utils';
 import { Code2, FolderTree, Tag as TagIcon, Star, Sparkles, Zap, Lock, Search, FileText, Download, Upload, Palette, Keyboard } from 'lucide-react';
 import PublicSnippets from '@/components/home/PublicSnippets';
@@ -21,6 +22,7 @@ export default function HomePage() {
               <span>SnippetVault</span>
             </Link>
             <nav className="flex items-center gap-4 text-sm font-mono">
+              <ThemeToggle />
               {user ? (
                 <Link
                   href="/dashboard"

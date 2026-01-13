@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { cn, formatDate, truncate, getLanguageColor } from '@/lib/utils';
 import TagBadge from '@/components/ui/TagBadge';
-import { Star, Clock, Folder } from 'lucide-react';
+import { Star, Clock } from 'lucide-react';
 import type { Snippet } from '@/types';
 
 interface SnippetCardProps {
@@ -61,18 +61,11 @@ export default function SnippetCard({ snippet }: SnippetCardProps) {
           </div>
         )}
 
-        <div className="flex items-center justify-between text-xs text-white/50 pt-3 border-t border-white/10 font-mono">
+        <div className="flex items-center text-xs text-white/50 pt-3 border-t border-white/10 font-mono">
           <div className="flex items-center gap-1.5">
             <Clock className="w-3.5 h-3.5" />
             <span>{formatDate(snippet.updatedAt)}</span>
           </div>
-          {snippet.category && (
-            <div className="flex items-center gap-1.5">
-              <Folder className="w-3.5 h-3.5" />
-              {snippet.category.icon && <span className="text-xs">{snippet.category.icon}</span>}
-              <span className="font-medium">{snippet.category.name}</span>
-            </div>
-          )}
         </div>
       </div>
       

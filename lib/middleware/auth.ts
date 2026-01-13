@@ -133,18 +133,12 @@ export async function getAccessibleSnippet(
     where: { id: snippetId },
     include: {
       tags: true,
-      category: true,
       user: {
         select: {
           id: true,
           name: true,
           username: true,
           avatar: true,
-        },
-      },
-      _count: {
-        select: {
-          likes: true,
         },
       },
     },
@@ -166,26 +160,3 @@ export async function getAccessibleSnippet(
 
   return null;
 }
-
-/**
- * Check if user has liked a snippet
- * @param userId User ID
- * @param snippetId Snippet ID
- * @returns True if user has liked the snippet
- */
-export async function hasUserLikedSnippet(
-  userId: string,
-  snippetId: string
-): Promise<boolean> {
-  const like = await prisma.like.findUnique({
-    where: {
-      userId_snippetId: {
-        userId,
-        snippetId,
-      },
-    },
-  });
-
-  return !!like;
-}
-

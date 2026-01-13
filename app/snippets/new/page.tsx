@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSnippets } from '@/lib/hooks/useSnippets';
 import { useTags } from '@/lib/hooks/useTags';
 import MainLayout from '@/components/layout/MainLayout';
 import SnippetForm from '@/components/snippets/SnippetForm';
-import type { SnippetFormData, Category } from '@/types';
+import type { SnippetFormData } from '@/types';
 import toast from 'react-hot-toast';
 
 export default function NewSnippetPage() {
@@ -14,13 +14,6 @@ export default function NewSnippetPage() {
   const { createSnippet } = useSnippets();
   const { tags } = useTags();
   const [loading, setLoading] = useState(false);
-  const [categories, setCategories] = useState<Category[]>([]);
-
-  useEffect(() => {
-    fetch('/api/categories')
-      .then((res) => res.json())
-      .then(setCategories);
-  }, []);
 
   const handleSubmit = async (data: SnippetFormData) => {
     try {
@@ -36,7 +29,7 @@ export default function NewSnippetPage() {
   };
 
   return (
-    <MainLayout categories={categories} onSearch={() => {}}>
+    <MainLayout onSearch={() => {}}>
       <div className="max-w-4xl mx-auto space-y-6">
         <div>
           <h1 className="text-2xl font-semibold text-white">New snippet</h1>
@@ -44,7 +37,6 @@ export default function NewSnippetPage() {
         </div>
         <SnippetForm
           tags={tags}
-          categories={categories}
           onSubmit={handleSubmit}
           onCancel={() => router.back()}
           loading={loading}

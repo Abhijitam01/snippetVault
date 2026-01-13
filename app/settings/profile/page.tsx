@@ -7,7 +7,6 @@ import MainLayout from '@/components/layout/MainLayout';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import { User, Link as LinkIcon, Github, Twitter } from 'lucide-react';
-import type { Category } from '@/types';
 
 export default function ProfileSettingsPage() {
   const router = useRouter();
@@ -15,7 +14,6 @@ export default function ProfileSettingsPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [formData, setFormData] = useState({
     name: '',
     username: '',
@@ -31,14 +29,6 @@ export default function ProfileSettingsPage() {
       router.push('/auth/login');
     }
   }, [user, authLoading, router]);
-
-  // Fetch categories for MainLayout
-  useEffect(() => {
-    fetch('/api/categories')
-      .then((res) => res.json())
-      .then((data) => setCategories(data))
-      .catch((err) => console.error('Failed to fetch categories:', err));
-  }, []);
 
   useEffect(() => {
     if (user) {
@@ -115,7 +105,7 @@ export default function ProfileSettingsPage() {
   }
 
   return (
-    <MainLayout categories={categories} onSearch={handleSearch}>
+    <MainLayout onSearch={handleSearch}>
       <div className="max-w-3xl mx-auto space-y-6">
         <div>
           <h1 className="text-2xl font-semibold text-white font-mono">Profile Settings</h1>

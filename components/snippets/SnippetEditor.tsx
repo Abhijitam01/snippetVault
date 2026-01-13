@@ -1,12 +1,11 @@
 'use client';
 
 import SnippetForm from './SnippetForm';
-import type { SnippetFormData, Tag, Category } from '@/types';
+import type { SnippetFormData, Tag } from '@/types';
 
 interface SnippetEditorProps {
   initialData?: Partial<SnippetFormData>;
   tags: Tag[];
-  categories: Category[];
   onSubmit: (data: SnippetFormData) => void;
   onCancel?: () => void;
   loading?: boolean;
@@ -15,7 +14,6 @@ interface SnippetEditorProps {
 export default function SnippetEditor({
   initialData,
   tags,
-  categories,
   onSubmit,
   onCancel,
   loading,
@@ -24,7 +22,6 @@ export default function SnippetEditor({
     <SnippetForm
       initialData={initialData}
       tags={tags}
-      categories={categories}
       onSubmit={onSubmit}
       onCancel={onCancel}
       loading={loading}

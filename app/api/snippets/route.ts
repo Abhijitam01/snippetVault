@@ -9,7 +9,6 @@ export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
     const language = searchParams.get('language');
-    const categoryId = searchParams.get('categoryId');
     const isFavorite = searchParams.get('isFavorite');
     const userId = searchParams.get('userId');
     const visibility = searchParams.get('visibility');
@@ -17,38 +16,43 @@ export async function GET(request: NextRequest) {
     // Get current user if authenticated
     const currentUser = await getUserFromRequest(request);
 
-    const snippets = await prisma.snippet.findMany({
-      where: {
-        ...(language && { language }),
-        ...(categoryId && { categoryId }),
-        ...(isFavorite && { isFavorite: isFavorite === 'true' }),
-        ...(userId && { userId }),
-        ...(visibility && { visibility }),
-        // If requesting user's own snippets, show all visibility
-        // If not, only show public snippets
-        ...(!userId && !currentUser && { visibility: 'public' }),
-      },
-      include: {
-        tags: true,
-        category: true,
-        user: {
-          select: {
-            id: true,
-            name: true,
-            username: true,
-            avatar: true,
+    // Pagination
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = Math.min(parseInt(searchParams.get('limit') || '20'), 100); // Max 100
+    const skip = (page - 1) * limit;
+
+    const where = {
+      ...(language && { language }),
+      ...(isFavorite && { isFavorite: isFavorite === 'true' }),
+      ...(userId && { userId }),
+      ...(visibility && { visibility }),
+      // If requesting user's own snippets, show all visibility
+      // If not, only show public snippets
+      ...(!userId && !currentUser && { visibility: 'public' }),
+    };
+
+    const [snippets, total] = await Promise.all([
+      prisma.snippet.findMany({
+        where,
+        include: {
+          tags: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+              avatar: true,
+            },
           },
         },
-        _count: {
-          select: {
-            likes: true,
-          },
+        orderBy: {
+          updatedAt: 'desc',
         },
-      },
-      orderBy: {
-        updatedAt: 'desc',
-      },
-    });
+        skip,
+        take: limit,
+      }),
+      prisma.snippet.count({ where }),
+    ]);
 
     // Filter out private snippets that don't belong to current user
     const filteredSnippets = snippets.filter((snippet) => {
@@ -61,7 +65,15 @@ export async function GET(request: NextRequest) {
       return false;
     });
 
-    return NextResponse.json(filteredSnippets);
+    return NextResponse.json({
+      snippets: filteredSnippets,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
+      },
+    });
   } catch (error) {
     console.error('Error fetching snippets:', error);
     return NextResponse.json(
@@ -110,7 +122,6 @@ export async function POST(request: NextRequest) {
         description: validatedData.description,
         code: validatedData.code,
         language: validatedData.language,
-        categoryId: validatedData.categoryId || null,
         notes: validatedData.notes || null,
         resources: validatedData.resources && validatedData.resources.length > 0
           ? JSON.stringify(validatedData.resources)
@@ -126,18 +137,12 @@ export async function POST(request: NextRequest) {
       },
       include: {
         tags: true,
-        category: true,
         user: {
           select: {
             id: true,
             name: true,
             username: true,
             avatar: true,
-          },
-        },
-        _count: {
-          select: {
-            likes: true,
           },
         },
       },

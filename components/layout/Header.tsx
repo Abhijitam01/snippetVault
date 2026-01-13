@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import Link from 'next/link';
 import SearchBar from '@/components/ui/SearchBar';
 import Button from '@/components/ui/Button';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 import Logo from '@/components/ui/Logo';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { LogOut } from 'lucide-react';
@@ -11,9 +12,10 @@ import toast from 'react-hot-toast';
 
 interface HeaderProps {
   onSearch: (query: string) => void;
+  searchInputRef?: React.RefObject<HTMLInputElement>;
 }
 
-export default function Header({ onSearch }: HeaderProps) {
+export default function Header({ onSearch, searchInputRef }: HeaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { logout, user } = useAuth();
 
@@ -68,7 +70,8 @@ export default function Header({ onSearch }: HeaderProps) {
       const result = await response.json();
       toast.success(`Imported ${result.imported} snippet(s) successfully!`);
       
-      window.location.reload();
+      // Use router instead of window.location.reload() for better performance
+      window.location.href = '/dashboard';
     } catch (error) {
       console.error('Import error:', error);
       toast.error('Failed to import snippets. Please check the file format.');
@@ -97,16 +100,20 @@ export default function Header({ onSearch }: HeaderProps) {
             <span>SnippetVault</span>
           </Link>
           <div className="flex-1 max-w-xl">
-            <SearchBar onSearch={onSearch} />
+            <SearchBar ref={searchInputRef} onSearch={onSearch} />
           </div>
         </div>
         <div className="flex items-center gap-3">
           {user && (
-            <div className="hidden sm:block text-xs font-mono text-white/50 font-mono">
+            <Link 
+              href="/settings/profile"
+              className="hidden sm:block text-xs font-mono text-white/50 hover:text-white/80 transition-colors cursor-pointer"
+            >
               {user.email}
-            </div>
+            </Link>
           )}
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <Button variant="outline" size="sm" onClick={handleExport}>
               Export
             </Button>

@@ -13,7 +13,6 @@ export async function GET(
       where: { shortCode: params.shortCode },
       include: {
         tags: true,
-        category: true,
         user: {
           select: {
             id: true,
@@ -24,11 +23,6 @@ export async function GET(
             website: true,
             githubUrl: true,
             twitterUrl: true,
-          },
-        },
-        _count: {
-          select: {
-            likes: true,
           },
         },
       },
@@ -61,24 +55,7 @@ export async function GET(
       },
     });
 
-    // Check if current user has liked this snippet
-    let hasLiked = false;
-    if (currentUser) {
-      const like = await prisma.like.findUnique({
-        where: {
-          userId_snippetId: {
-            userId: currentUser.userId,
-            snippetId: snippet.id,
-          },
-        },
-      });
-      hasLiked = !!like;
-    }
-
-    return NextResponse.json({
-      ...snippet,
-      hasLiked,
-    });
+    return NextResponse.json(snippet);
   } catch (error) {
     console.error('Error fetching snippet by short code:', error);
     return NextResponse.json(

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import SnippetViewer from '@/components/snippets/SnippetViewer';
 import MainLayout from '@/components/layout/MainLayout';
-import type { Snippet, Category } from '@/types';
+import type { Snippet } from '@/types';
 import { useSnippets } from '@/lib/hooks/useSnippets';
 import toast from 'react-hot-toast';
 
@@ -14,7 +14,6 @@ export default function SnippetPage() {
   const id = params.id as string;
   const { deleteSnippet } = useSnippets();
   const [snippet, setSnippet] = useState<Snippet | null>(null);
-  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     fetch(`/api/snippets/${id}`)
@@ -24,10 +23,6 @@ export default function SnippetPage() {
         toast.error('Failed to load snippet');
         router.push('/dashboard');
       });
-
-    fetch('/api/categories')
-      .then((res) => res.json())
-      .then(setCategories);
   }, [id, router]);
 
   const handleEdit = () => {
@@ -48,14 +43,14 @@ export default function SnippetPage() {
 
   if (!snippet) {
     return (
-      <MainLayout categories={categories} onSearch={() => {}}>
+      <MainLayout onSearch={() => {}}>
         <div>Loading...</div>
       </MainLayout>
     );
   }
 
   return (
-    <MainLayout categories={categories} onSearch={() => {}}>
+    <MainLayout onSearch={() => {}}>
       <SnippetViewer snippet={snippet} onEdit={handleEdit} onDelete={handleDelete} />
     </MainLayout>
   );

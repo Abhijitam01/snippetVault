@@ -1,10 +1,9 @@
-import { Snippet as PrismaSnippet, Tag, Category } from '@prisma/client';
+import { Snippet as PrismaSnippet, Tag } from '@prisma/client';
 
-export type { Tag, Category };
+export type { Tag };
 
 export type SnippetWithRelations = PrismaSnippet & {
   tags: Tag[];
-  category: Category | null;
 };
 
 export type Snippet = SnippetWithRelations;
@@ -15,7 +14,6 @@ export interface CreateSnippetDTO {
   code: string;
   language: string;
   tagIds?: string[];
-  categoryId?: string;
   notes?: string;
   resources?: string[];
 }
@@ -28,7 +26,6 @@ export interface SearchFilters {
   query?: string;
   language?: string;
   tagIds?: string[];
-  categoryId?: string;
   isFavorite?: boolean;
 }
 
@@ -40,7 +37,6 @@ export interface SnippetFormData {
   code: string;
   language: string;
   tagIds: string[];
-  categoryId?: string;
   notes?: string;
   resources: string[];
   isFavorite?: boolean;
@@ -50,12 +46,6 @@ export interface SnippetFormData {
 export interface CreateTagDTO {
   name: string;
   color?: string;
-}
-
-export interface CreateCategoryDTO {
-  name: string;
-  description?: string;
-  icon?: string;
 }
 
 export interface ApiResponse<T> {

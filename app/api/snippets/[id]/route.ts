@@ -82,7 +82,6 @@ export async function PUT(
       description?: string | null;
       code?: string;
       language?: string;
-      categoryId?: string | null;
       notes?: string | null;
       resources?: string | null;
       isFavorite?: boolean;
@@ -93,7 +92,6 @@ export async function PUT(
     if (validatedData.description !== undefined) updateData.description = validatedData.description;
     if (validatedData.code !== undefined) updateData.code = validatedData.code;
     if (validatedData.language !== undefined) updateData.language = validatedData.language;
-    if (validatedData.categoryId !== undefined) updateData.categoryId = validatedData.categoryId || null;
     if (validatedData.notes !== undefined) updateData.notes = validatedData.notes || null;
     if (validatedData.resources !== undefined) {
       updateData.resources = validatedData.resources.length > 0
@@ -113,18 +111,12 @@ export async function PUT(
       data: updateData,
       include: {
         tags: true,
-        category: true,
         user: {
           select: {
             id: true,
             name: true,
             username: true,
             avatar: true,
-          },
-        },
-        _count: {
-          select: {
-            likes: true,
           },
         },
       },

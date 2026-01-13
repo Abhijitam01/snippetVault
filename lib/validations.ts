@@ -6,7 +6,6 @@ export const createSnippetSchema = z.object({
   code: z.string().min(1, 'Code is required'),
   language: z.string().min(1, 'Language is required'),
   tagIds: z.array(z.string()).optional(),
-  categoryId: z.string().optional(),
   notes: z.string().optional(),
   resources: z.array(z.string().url()).optional(),
   visibility: z.enum(['public', 'private', 'unlisted']).optional(),
@@ -21,24 +20,14 @@ export const createTagSchema = z.object({
   color: z.string().regex(/^#[0-9A-F]{6}$/i).optional(),
 });
 
-export const createCategorySchema = z.object({
-  name: z.string().min(1).max(100),
-  description: z.string().max(500).optional(),
-  icon: z.string().max(10).optional(),
-});
-
-export const updateCategorySchema = createCategorySchema.partial();
-
 export const updateTagSchema = createTagSchema.partial();
 
 export const snippetSchema = createSnippetSchema;
-export const categorySchema = createCategorySchema;
 export const tagSchema = createTagSchema;
 
 export const searchSchema = z.object({
   query: z.string().optional(),
   language: z.string().optional(),
   tagIds: z.array(z.string()).optional(),
-  categoryId: z.string().optional(),
   isFavorite: z.boolean().optional(),
 });

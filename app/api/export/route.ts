@@ -6,7 +6,6 @@ export async function GET() {
     const snippets = await prisma.snippet.findMany({
       include: {
         tags: true,
-        category: true,
       },
       orderBy: {
         createdAt: 'desc',
@@ -16,13 +15,12 @@ export async function GET() {
     const exportData = {
       version: '1.0',
       exportedAt: new Date().toISOString(),
-      snippets: snippets.map((snippet: { title: string; description: string | null; code: string; language: string; tags: Array<{ name: string }>; category: { name: string } | null; notes: string | null; resources: string | null; isFavorite: boolean; createdAt: Date; updatedAt: Date }) => ({
+      snippets: snippets.map((snippet: { title: string; description: string | null; code: string; language: string; tags: Array<{ name: string }>; notes: string | null; resources: string | null; isFavorite: boolean; createdAt: Date; updatedAt: Date }) => ({
         title: snippet.title,
         description: snippet.description,
         code: snippet.code,
         language: snippet.language,
         tags: snippet.tags.map((tag: { name: string }) => tag.name),
-        category: snippet.category?.name,
         notes: snippet.notes,
         resources: snippet.resources ? JSON.parse(snippet.resources) : [],
         isFavorite: snippet.isFavorite,

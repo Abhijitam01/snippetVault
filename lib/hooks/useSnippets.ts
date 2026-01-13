@@ -8,13 +8,28 @@ export function useSnippets() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchSnippets = async () => {
+  const fetchSnippets = async (page = 1, limit = 20) => {
     try {
       setLoading(true);
-      const response = await fetch('/api/snippets');
+      // Get current user ID from session
+      const sessionRes = await fetch('/api/auth/session');
+      const sessionData = await sessionRes.json();
+      const userId = sessionData.user?.id;
+      
+      // Only fetch user's own snippets if authenticated
+      const url = userId 
+        ? `/api/snippets?page=${page}&limit=${limit}&userId=${userId}`
+        : `/api/snippets?page=${page}&limit=${limit}`;
+      
+      const response = await fetch(url);
       if (!response.ok) throw new Error('Failed to fetch snippets');
       const data = await response.json();
-      setSnippets(data);
+      // Handle both old format (array) and new format (object with pagination)
+      if (Array.isArray(data)) {
+        setSnippets(data);
+      } else {
+        setSnippets(data.snippets || []);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {

@@ -3,11 +3,19 @@
 @tailwind utilities;
 
 :root {
-  --background: #000000;
-  --foreground: #ffffff;
   --blue: #3b82f6;
   --blue-dark: #2563eb;
   --blue-light: #60a5fa;
+}
+
+.dark {
+  --background: #000000;
+  --foreground: #ffffff;
+}
+
+.light {
+  --background: #ffffff;
+  --foreground: #000000;
 }
 
 @theme inline {
@@ -18,9 +26,18 @@
 }
 
 body {
-  background: radial-gradient(circle at top, #020617 0, #020617 15%, #020617 40%, #000000 100%);
-  color: #ffffff;
+  background: var(--background);
+  color: var(--foreground);
   font-family: var(--font-mono), 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.dark body {
+  background: radial-gradient(circle at top, #020617 0, #020617 15%, #020617 40%, #000000 100%);
+}
+
+.light body {
+  background: radial-gradient(circle at top, #f8fafc 0, #f1f5f9 15%, #e2e8f0 40%, #ffffff 100%);
 }
 
 @keyframes gradient-shift {
@@ -66,14 +83,24 @@ body {
   height: 10px;
 }
 
-::-webkit-scrollbar-track {
+.dark ::-webkit-scrollbar-track {
   background: #000000;
 }
 
-::-webkit-scrollbar-thumb {
+.light ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+.dark ::-webkit-scrollbar-thumb {
   background: #1a1a1a;
   border-radius: 5px;
   border: 1px solid #333333;
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 5px;
+  border: 1px solid #94a3b8;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -82,9 +109,6 @@ body {
 
 code[class*="language-"],
 pre[class*="language-"] {
-  color: #e5e7eb;
-  background: #111827;
-  text-shadow: 0 1px rgba(0, 0, 0, 0.3);
   font-family: var(--font-mono), Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
   text-align: left;
   white-space: pre;
@@ -96,6 +120,20 @@ pre[class*="language-"] {
   hyphens: none;
 }
 
+.dark code[class*="language-"],
+.dark pre[class*="language-"] {
+  color: #e5e7eb;
+  background: #111827;
+  text-shadow: 0 1px rgba(0, 0, 0, 0.3);
+}
+
+.light code[class*="language-"],
+.light pre[class*="language-"] {
+  color: #1f2937;
+  background: #f9fafb;
+  text-shadow: none;
+}
+
 pre[class*="language-"] {
   padding: 1em;
   margin: 0.5em 0;
@@ -103,9 +141,14 @@ pre[class*="language-"] {
   border-radius: 0.3em;
 }
 
-:not(pre) > code[class*="language-"],
-pre[class*="language-"] {
+.dark :not(pre) > code[class*="language-"],
+.dark pre[class*="language-"] {
   background: #111827;
+}
+
+.light :not(pre) > code[class*="language-"],
+.light pre[class*="language-"] {
+  background: #f9fafb;
 }
 
 .token.comment,

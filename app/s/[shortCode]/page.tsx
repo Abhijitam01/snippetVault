@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
-import { Code2, Eye, Heart, GitFork, Calendar, User, Globe, Github, Twitter } from 'lucide-react';
+import { Code2, Eye, Calendar, User, Globe, Github, Twitter } from 'lucide-react';
 import SnippetViewer from '@/components/snippets/SnippetViewer';
 import { Metadata } from 'next';
 
@@ -16,7 +16,6 @@ async function getSnippet(shortCode: string) {
     where: { shortCode },
     include: {
       tags: true,
-      category: true,
       user: {
         select: {
           id: true,
@@ -27,11 +26,6 @@ async function getSnippet(shortCode: string) {
           website: true,
           githubUrl: true,
           twitterUrl: true,
-        },
-      },
-      _count: {
-        select: {
-          likes: true,
         },
       },
     },
@@ -160,29 +154,14 @@ export default async function PublicSnippetPage({ params }: PageProps) {
                   <span>{snippet.viewCount} views</span>
                 </div>
                 <div className="flex items-center gap-2 text-white/60">
-                  <Heart className="w-4 h-4" />
-                  <span>{snippet._count.likes} likes</span>
-                </div>
-                {snippet.forkedCount > 0 && (
-                  <div className="flex items-center gap-2 text-white/60">
-                    <GitFork className="w-4 h-4" />
-                    <span>{snippet.forkedCount} forks</span>
-                  </div>
-                )}
-                <div className="flex items-center gap-2 text-white/60">
                   <Calendar className="w-4 h-4" />
                   <span>{formattedDate}</span>
                 </div>
               </div>
 
-              {/* Tags and Category */}
-              {(snippet.tags.length > 0 || snippet.category) && (
+              {/* Tags */}
+              {snippet.tags.length > 0 && (
                 <div className="flex flex-wrap items-center gap-2">
-                  {snippet.category && (
-                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-mono bg-blue-500/20 text-blue-400 border border-blue-500/30">
-                      {snippet.category.icon} {snippet.category.name}
-                    </span>
-                  )}
                   {snippet.tags.map((tag) => (
                     <span
                       key={tag.id}

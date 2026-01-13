@@ -1,15 +1,15 @@
 'use client';
 
-import { useState, FormEvent } from 'react';
+import { useState, FormEvent, forwardRef } from 'react';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import TagBadge from '@/components/ui/TagBadge';
-import type { SnippetFormData, Tag, Category } from '@/types';
+import CodeEditor from './CodeEditor';
+import type { SnippetFormData, Tag } from '@/types';
 
 interface SnippetFormProps {
   initialData?: Partial<SnippetFormData>;
   tags: Tag[];
-  categories: Category[];
   onSubmit: (data: SnippetFormData) => void;
   onCancel?: () => void;
   loading?: boolean;
@@ -21,21 +21,19 @@ const LANGUAGES = [
   'sql', 'yaml', 'json', 'markdown', 'bash', 'shell'
 ];
 
-export default function SnippetForm({
+const SnippetForm = forwardRef<HTMLFormElement, SnippetFormProps>(({
   initialData,
   tags,
-  categories,
   onSubmit,
   onCancel,
   loading = false,
-}: SnippetFormProps) {
+}, ref) => {
   const [formData, setFormData] = useState<SnippetFormData>({
     title: initialData?.title || '',
     description: initialData?.description || '',
     code: initialData?.code || '',
     language: initialData?.language || 'typescript',
     tagIds: initialData?.tagIds || [],
-    categoryId: initialData?.categoryId || undefined,
     notes: initialData?.notes || '',
     resources: initialData?.resources || [],
     isFavorite: initialData?.isFavorite || false,
@@ -57,7 +55,7 @@ export default function SnippetForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form ref={ref} onSubmit={handleSubmit} className="space-y-6">
       <div>
         <label className="block text-sm font-medium mb-2 text-gray-100">Title *</label>
         <Input
@@ -77,38 +75,20 @@ export default function SnippetForm({
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium mb-2 text-gray-100">Language *</label>
-          <select
-            value={formData.language}
-            onChange={(e) => setFormData({ ...formData, language: e.target.value })}
-            className="w-full rounded-md border border-gray-700 bg-gray-800 text-gray-100 px-3 py-2 text-sm"
-            required
-          >
-            {LANGUAGES.map((lang) => (
-              <option key={lang} value={lang}>
-                {lang}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-2 text-gray-100">Category</label>
-          <select
-            value={formData.categoryId || ''}
-            onChange={(e) => setFormData({ ...formData, categoryId: e.target.value || undefined })}
-            className="w-full rounded-md border border-gray-700 bg-gray-800 text-gray-100 px-3 py-2 text-sm"
-          >
-            <option value="">None</option>
-            {categories.map((cat) => (
-              <option key={cat.id} value={cat.id}>
-                {cat.name}
-              </option>
-            ))}
-          </select>
-        </div>
+      <div>
+        <label className="block text-sm font-medium mb-2 text-gray-100">Language *</label>
+        <select
+          value={formData.language}
+          onChange={(e) => setFormData({ ...formData, language: e.target.value })}
+          className="w-full rounded-md border border-gray-700 bg-gray-800 text-gray-100 px-3 py-2 text-sm"
+          required
+        >
+          {LANGUAGES.map((lang) => (
+            <option key={lang} value={lang}>
+              {lang}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div>
@@ -131,14 +111,17 @@ export default function SnippetForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-2 text-gray-100">Code *</label>
-        <textarea
-          value={formData.code}
-          onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-          className="w-full rounded-md border border-gray-700 bg-gray-800 text-gray-100 px-3 py-2 text-sm font-mono"
-          rows={15}
-          required
-        />
+        <label className="block text-sm font-medium mb-2 text-gray-100 dark:text-gray-100">Code *</label>
+        <div className="rounded-md border border-gray-700 dark:border-white/10 bg-gray-800 dark:bg-black/40 overflow-hidden">
+          <CodeEditor
+            value={formData.code}
+            onChange={(value) => setFormData({ ...formData, code: value })}
+            language={formData.language}
+            placeholder="Enter your code here..."
+            minHeight="300px"
+            maxHeight="600px"
+          />
+        </div>
       </div>
 
       <div>
@@ -233,5 +216,9 @@ export default function SnippetForm({
       </div>
     </form>
   );
-}
+});
+
+SnippetForm.displayName = 'SnippetForm';
+
+export default SnippetForm;
 

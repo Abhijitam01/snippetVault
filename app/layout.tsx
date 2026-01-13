@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import Providers from "@/components/providers/Providers";
 
@@ -33,12 +32,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased bg-black text-white`}
+        className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased`}
       >
         <Providers>{children}</Providers>
-        <Analytics />
       </body>
     </html>
   );

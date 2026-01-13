@@ -31,13 +31,12 @@ export default function Modal({ isOpen, onClose, title, children, className }: M
       <div className="fixed inset-0 bg-black/50" onClick={onClose} />
       <div className={cn(
         'relative z-50 w-full max-w-lg max-h-[90vh] overflow-y-auto',
-        'bg-white rounded-lg shadow-xl p-6',
-        'dark:bg-gray-800',
+        'bg-black/90 border border-white/10 rounded-lg shadow-xl p-6',
         className
       )}>
         {title && (
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-semibold">{title}</h2>
+            <h2 className="text-xl font-semibold text-white font-mono">{title}</h2>
             <Button variant="ghost" size="sm" onClick={onClose}>
               ×
             </Button>

@@ -47,22 +47,6 @@ export async function POST(request: NextRequest) {
           }
         }
 
-        // Find category if provided
-        let categoryId = null;
-        if (snippetData.category) {
-          let category = await prisma.category.findUnique({
-            where: { name: snippetData.category },
-          });
-
-          if (!category) {
-            category = await prisma.category.create({
-              data: { name: snippetData.category },
-            });
-          }
-
-          categoryId = category.id;
-        }
-
         // Generate unique short code
         let shortCode = generateShortCode();
         let attempts = 0;
@@ -85,7 +69,6 @@ export async function POST(request: NextRequest) {
             description: snippetData.description || null,
             code: snippetData.code || '',
             language: snippetData.language || 'text',
-            categoryId,
             notes: snippetData.notes || null,
             resources: snippetData.resources
               ? JSON.stringify(snippetData.resources)
@@ -100,7 +83,6 @@ export async function POST(request: NextRequest) {
           },
           include: {
             tags: true,
-            category: true,
           },
         });
 

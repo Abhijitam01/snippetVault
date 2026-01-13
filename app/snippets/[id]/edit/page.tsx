@@ -6,7 +6,7 @@ import { useSnippets } from '@/lib/hooks/useSnippets';
 import { useTags } from '@/lib/hooks/useTags';
 import MainLayout from '@/components/layout/MainLayout';
 import SnippetForm from '@/components/snippets/SnippetForm';
-import type { SnippetFormData, Category } from '@/types';
+import type { SnippetFormData } from '@/types';
 import toast from 'react-hot-toast';
 
 export default function EditSnippetPage() {
@@ -17,13 +17,6 @@ export default function EditSnippetPage() {
   const { tags } = useTags();
   const [loading, setLoading] = useState(false);
   const [initialData, setInitialData] = useState<Partial<SnippetFormData>>();
-  const [categories, setCategories] = useState<Category[]>([]);
-
-  useEffect(() => {
-    fetch('/api/categories')
-      .then((res) => res.json())
-      .then(setCategories);
-  }, []);
 
   useEffect(() => {
     if (snippets.length > 0) {
@@ -35,7 +28,6 @@ export default function EditSnippetPage() {
           code: snippet.code,
           language: snippet.language,
           tagIds: snippet.tags.map((t: { id: string }) => t.id),
-          categoryId: snippet.categoryId || undefined,
           notes: snippet.notes || '',
           resources: snippet.resources ? JSON.parse(snippet.resources) : [],
           isFavorite: snippet.isFavorite,
@@ -51,7 +43,6 @@ export default function EditSnippetPage() {
               code: snippet.code,
               language: snippet.language,
               tagIds: snippet.tags.map((t: { id: string }) => t.id),
-              categoryId: snippet.categoryId || undefined,
               notes: snippet.notes || '',
               resources: snippet.resources ? JSON.parse(snippet.resources) : [],
               isFavorite: snippet.isFavorite,
@@ -80,14 +71,14 @@ export default function EditSnippetPage() {
 
   if (!initialData) {
     return (
-      <MainLayout categories={categories} onSearch={() => {}}>
+      <MainLayout onSearch={() => {}}>
         <div className="max-w-4xl mx-auto">Loading...</div>
       </MainLayout>
     );
   }
 
   return (
-    <MainLayout categories={categories} onSearch={() => {}}>
+    <MainLayout onSearch={() => {}}>
       <div className="max-w-4xl mx-auto space-y-6">
         <div>
           <h1 className="text-2xl font-semibold text-white">Edit snippet</h1>
@@ -96,7 +87,6 @@ export default function EditSnippetPage() {
         <SnippetForm
           initialData={initialData}
           tags={tags}
-          categories={categories}
           onSubmit={handleSubmit}
           onCancel={() => router.back()}
           loading={loading}

@@ -14,7 +14,7 @@ export function useSearch() {
       setError(null);
       
       // If no search params at all, clear results
-      const hasAnyParams = params.query || params.language || params.categoryId || 
+      const hasAnyParams = params.query || params.language || 
                           (params.tagIds && params.tagIds.length > 0) || 
                           params.isFavorite !== undefined;
       
@@ -27,7 +27,6 @@ export function useSearch() {
       const queryParams = new URLSearchParams();
       if (params.query) queryParams.append('query', params.query);
       if (params.language) queryParams.append('language', params.language);
-      if (params.categoryId) queryParams.append('categoryId', params.categoryId);
       if (params.tagIds) params.tagIds.forEach(id => queryParams.append('tagIds', id));
       if (params.isFavorite !== undefined) queryParams.append('isFavorite', String(params.isFavorite));
 

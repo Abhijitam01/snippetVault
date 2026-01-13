@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, memo } from 'react';
 import Link from 'next/link';
 import { cn, formatDate, truncate, getLanguageColor } from '@/lib/utils';
 import TagBadge from '@/components/ui/TagBadge';
@@ -10,9 +10,18 @@ import type { Snippet } from '@/types';
 interface SnippetBentoGridProps {
   snippets: Snippet[];
   loading?: boolean;
+  selectedIds?: string[];
+  onSelectionChange?: (id: string, selected: boolean) => void;
+  selectionMode?: boolean;
 }
 
-export default function SnippetBentoGrid({ snippets, loading }: SnippetBentoGridProps) {
+const SnippetBentoGrid = memo(function SnippetBentoGrid({
+  snippets,
+  loading,
+  selectedIds = [],
+  onSelectionChange,
+  selectionMode = false,
+}: SnippetBentoGridProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const snippetsRef = useRef<string>('');
 
@@ -85,19 +94,52 @@ export default function SnippetBentoGrid({ snippets, loading }: SnippetBentoGrid
         const cardSize = getCardSize(index, snippets.length);
         const isLarge = cardSize.includes('row-span-2');
 
+        const isSelected = selectedIds.includes(snippet.id);
+
         return (
-          <Link
+          <div
             key={snippet.id}
-            href={`/snippets/${snippet.id}`}
             className={cn(
-              'group relative block overflow-hidden rounded-xl border border-white/10',
+              'group relative overflow-hidden rounded-xl border',
               'bg-gradient-to-br from-black/60 to-black/40 backdrop-blur-sm',
               'transition-[transform,border-color,box-shadow] duration-200 ease-out',
-              'hover:scale-[1.01] hover:border-blue-500/50',
-              'hover:shadow-xl hover:shadow-blue-500/10',
+              selectionMode
+                ? 'cursor-pointer'
+                : 'hover:scale-[1.01] hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/10',
+              isSelected ? 'border-blue-500 ring-2 ring-blue-500/50' : 'border-white/10',
               cardSize
             )}
+            onClick={() => {
+              if (selectionMode && onSelectionChange) {
+                onSelectionChange(snippet.id, !isSelected);
+              }
+            }}
           >
+            {selectionMode && (
+              <div className="absolute top-3 left-3 z-20">
+                <input
+                  type="checkbox"
+                  checked={isSelected}
+                  onChange={(e) => {
+                    e.stopPropagation();
+                    if (onSelectionChange) {
+                      onSelectionChange(snippet.id, e.target.checked);
+                    }
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                  className="h-5 w-5 rounded border-white/20 bg-black/60 text-blue-500 focus:ring-blue-500/60 cursor-pointer"
+                />
+              </div>
+            )}
+            <Link
+              href={`/snippets/${snippet.id}`}
+              className="block"
+              onClick={(e) => {
+                if (selectionMode) {
+                  e.preventDefault();
+                }
+              }}
+            >
             {/* Animated background gradient */}
             <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
             
@@ -176,17 +218,6 @@ export default function SnippetBentoGrid({ snippets, loading }: SnippetBentoGrid
                   <Clock className="w-3.5 h-3.5" />
                   <span>{formatDate(snippet.updatedAt)}</span>
                 </div>
-                {snippet.category && (
-                  <div className="flex items-center gap-1.5">
-                    <Folder className="w-3.5 h-3.5" />
-                    {snippet.category.icon && (
-                      <span className="text-xs">{snippet.category.icon}</span>
-                    )}
-                    <span className="font-medium truncate max-w-[100px]">
-                      {snippet.category.name}
-                    </span>
-                  </div>
-                )}
               </div>
             </div>
             
@@ -202,10 +233,13 @@ export default function SnippetBentoGrid({ snippets, loading }: SnippetBentoGrid
             <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none">
               <div className="h-full w-full bg-gradient-to-r from-transparent via-white/5 to-transparent" />
             </div>
-          </Link>
+            </Link>
+          </div>
         );
       })}
     </div>
   );
-}
+});
+
+export default SnippetBentoGrid;
 
