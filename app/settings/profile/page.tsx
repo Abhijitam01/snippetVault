@@ -32,8 +32,8 @@ export default function ProfileSettingsPage() {
     }
   }, [user, authLoading, router]);
 
+  // Fetch categories for MainLayout
   useEffect(() => {
-    // Fetch categories for MainLayout
     fetch('/api/categories')
       .then((res) => res.json())
       .then((data) => setCategories(data))

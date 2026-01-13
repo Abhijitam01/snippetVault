@@ -5,9 +5,11 @@
 :root {
   --background: #000000;
   --foreground: #ffffff;
-  --blue: #3b82f6;
-  --blue-dark: #2563eb;
-  --blue-light: #60a5fa;
+  --purple: #9333ea;
+  --purple-dark: #7e22ce;
+  --purple-light: #a855f7;
+  --violet: #7c3aed;
+  --cyan: #06b6d4;
 }
 
 @theme inline {
@@ -77,49 +79,54 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3b82f6;
+  background: linear-gradient(135deg, #9333ea, #7c3aed);
 }
 
+/* VS Code-like Syntax Highlighting Theme */
 code[class*="language-"],
 pre[class*="language-"] {
-  color: #e5e7eb;
-  background: #111827;
-  text-shadow: 0 1px rgba(0, 0, 0, 0.3);
-  font-family: var(--font-mono), Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+  color: #d4d4d4;
+  background: #0a0a0a;
+  text-shadow: none;
+  font-family: var(--font-mono), 'Fira Code', Consolas, Monaco, 'Andale Mono', monospace;
   text-align: left;
   white-space: pre;
   word-spacing: normal;
   word-break: normal;
   word-wrap: normal;
-  line-height: 1.5;
-  tab-size: 4;
+  line-height: 1.6;
+  tab-size: 2;
   hyphens: none;
 }
 
 pre[class*="language-"] {
-  padding: 1em;
-  margin: 0.5em 0;
+  padding: 1.5em;
+  margin: 0;
   overflow: auto;
-  border-radius: 0.3em;
+  border-radius: 0.5em;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 :not(pre) > code[class*="language-"],
 pre[class*="language-"] {
-  background: #111827;
+  background: #0a0a0a;
 }
 
+/* Comments */
 .token.comment,
 .token.prolog,
 .token.doctype,
 .token.cdata {
-  color: #6b7280;
+  color: #6a9955;
   font-style: italic;
 }
 
+/* Punctuation */
 .token.punctuation {
-  color: #9ca3af;
+  color: #d4d4d4;
 }
 
+/* Properties, Tags, Booleans, Numbers, Constants */
 .token.property,
 .token.tag,
 .token.boolean,
@@ -127,39 +134,95 @@ pre[class*="language-"] {
 .token.constant,
 .token.symbol,
 .token.deleted {
-  color: #f472b6;
+  color: #b5cea8;
 }
 
+/* Strings */
 .token.selector,
 .token.attr-name,
 .token.string,
 .token.char,
 .token.builtin,
 .token.inserted {
-  color: #34d399;
+  color: #ce9178;
 }
 
+/* Operators, Entities, URLs */
 .token.operator,
 .token.entity,
 .token.url,
 .language-css .token.string,
 .style .token.string {
-  color: #60a5fa;
+  color: #d4d4d4;
+  background: transparent;
 }
 
+/* Keywords */
 .token.atrule,
 .token.attr-value,
 .token.keyword {
-  color: #a78bfa;
+  color: #c586c0;
 }
 
+/* Functions */
 .token.function,
 .token.class-name {
-  color: #fbbf24;
+  color: #dcdcaa;
 }
 
+/* Regex, Important, Variables */
 .token.regex,
 .token.important,
 .token.variable {
-  color: #f59e0b;
+  color: #4fc1ff;
+}
+
+/* Tag names */
+.token.tag .token.tag {
+  color: #569cd6;
+}
+
+/* Attributes */
+.token.attr-name {
+  color: #9cdcfe;
+}
+
+/* Method */
+.token.method {
+  color: #dcdcaa;
+}
+
+/* Namespace */
+.token.namespace {
+  opacity: 0.7;
+}
+
+/* Typescript/JSX specific */
+.language-typescript .token.keyword,
+.language-javascript .token.keyword {
+  color: #569cd6;
+}
+
+.language-tsx .token.tag,
+.language-jsx .token.tag {
+  color: #4ec9b0;
+}
+
+/* Python specific */
+.language-python .token.keyword {
+  color: #569cd6;
+}
+
+.language-python .token.builtin {
+  color: #4ec9b0;
+}
+
+/* Make important tokens bold */
+.token.important,
+.token.bold {
+  font-weight: 600;
+}
+
+.token.italic {
+  font-style: italic;
 }

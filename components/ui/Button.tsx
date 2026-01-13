@@ -11,9 +11,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const baseStyles = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 font-mono';
     
     const variants = {
-      primary: 'bg-blue-600 text-white hover:bg-blue-700 border border-blue-500 focus-visible:ring-blue-500',
+      primary: 'bg-gradient-to-r from-purple-600 to-violet-600 text-white hover:from-purple-700 hover:to-violet-700 border border-purple-500/50 focus-visible:ring-purple-500 shadow-lg shadow-purple-500/20',
       secondary: 'bg-white/10 text-white border border-white/20 hover:bg-white/20 focus-visible:ring-white/50',
-      outline: 'border border-white/20 bg-transparent text-white hover:border-blue-500 hover:bg-blue-500/10 focus-visible:ring-blue-500',
+      outline: 'border border-white/20 bg-transparent text-white hover:border-purple-500 hover:bg-purple-500/10 focus-visible:ring-purple-500',
       ghost: 'text-white hover:bg-white/10 focus-visible:ring-white/50',
       danger: 'bg-red-600 text-white hover:bg-red-700 border border-red-500 focus-visible:ring-red-500',
     };

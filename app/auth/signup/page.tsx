@@ -66,8 +66,8 @@ export default function SignupPage() {
         {/* Logo */}
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex items-center gap-2 mb-4">
-            <Code2 className="w-10 h-10 text-blue-500" />
-            <span className="text-2xl font-bold text-white">SnippetVault</span>
+            <Code2 className="w-10 h-10 text-purple-500" />
+            <span className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-violet-400 bg-clip-text text-transparent">SnippetVault</span>
           </Link>
           <h1 className="text-3xl font-bold text-white mb-2">Create Account</h1>
           <p className="text-gray-400">Start organizing your code snippets</p>
@@ -179,7 +179,7 @@ export default function SignupPage() {
           <div className="mt-6 text-center">
             <p className="text-gray-400">
               Already have an account?{' '}
-              <Link href="/auth/login" className="text-blue-500 hover:text-blue-400 font-medium">
+              <Link href="/auth/login" className="text-purple-400 hover:text-purple-300 font-medium transition-colors">
                 Sign In
               </Link>
             </p>

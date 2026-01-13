@@ -284,9 +284,9 @@ export default function SnippetViewer({ snippet, onEdit, onDelete, shareMode = f
       </div>
 
       {snippet.notes && (
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-          <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">Notes</h3>
-          <p className="text-blue-800 dark:text-blue-200 whitespace-pre-wrap">{snippet.notes}</p>
+        <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 rounded-lg p-4">
+          <h3 className="font-semibold text-purple-900 dark:text-purple-100 mb-2">Notes</h3>
+          <p className="text-purple-800 dark:text-purple-200 whitespace-pre-wrap">{snippet.notes}</p>
         </div>
       )}
 
@@ -300,7 +300,7 @@ export default function SnippetViewer({ snippet, onEdit, onDelete, shareMode = f
                   href={url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline"
+                  className="text-purple-500 hover:text-purple-400 hover:underline transition-colors"
                 >
                   {url}
                 </a>

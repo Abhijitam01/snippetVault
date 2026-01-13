@@ -51,7 +51,7 @@ export default function SnippetBentoGrid({ snippets, loading }: SnippetBentoGrid
         {[...Array(8)].map((_, i) => (
           <div
             key={i}
-            className="h-48 bg-black/40 rounded-xl border border-white/10 animate-pulse"
+            className="h-48 bg-black/60 rounded-xl border border-white/10 animate-pulse"
             style={{
               animationDelay: `${i * 50}ms`,
             }}

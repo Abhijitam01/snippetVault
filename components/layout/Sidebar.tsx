@@ -26,7 +26,7 @@ export default function Sidebar({ categories }: SidebarProps) {
             <Logo size={20} />
             <h1 className="text-lg font-semibold text-white tracking-tight font-mono">SnippetVault</h1>
           </div>
-          <p className="text-xs text-white/50 font-mono">Personal snippet vault</p>
+          <p className="text-xs text-white/70 font-mono">Personal snippet vault</p>
         </Link>
 
         <nav className="space-y-1 text-sm">
@@ -40,10 +40,10 @@ export default function Sidebar({ categories }: SidebarProps) {
                       'flex items-center gap-2 rounded-md px-3 py-2 transition-colors font-mono',
                       isActive
                         ? 'bg-white/10 text-white border-l-2 border-l-blue-500'
-                        : 'text-white/60 hover:text-white hover:bg-white/5'
+                        : 'text-white/80 hover:text-white hover:bg-white/5'
                     )}
                   >
-                    <span className="text-xs font-mono text-white/40">//</span>
+                    <span className="text-xs font-mono text-white/70">//</span>
                     <span className="font-mono">{item.label}</span>
               </Link>
             );
@@ -52,7 +52,7 @@ export default function Sidebar({ categories }: SidebarProps) {
 
         {categories.length > 0 && (
           <div className="mt-2 space-y-2">
-            <h2 className="px-3 text-[10px] font-semibold text-white/40 uppercase tracking-[0.16em]">
+            <h2 className="px-3 text-[10px] font-semibold text-white/70 uppercase tracking-[0.16em]">
               Categories
             </h2>
             <nav className="space-y-1 text-sm">
@@ -66,11 +66,11 @@ export default function Sidebar({ categories }: SidebarProps) {
                       'flex items-center gap-2 rounded-md px-3 py-2 transition-colors font-mono',
                       isActive
                         ? 'bg-white/10 text-white border-l-2 border-l-blue-500'
-                        : 'text-white/60 hover:text-white hover:bg-white/5'
+                        : 'text-white/80 hover:text-white hover:bg-white/5'
                     )}
                   >
                     {category.icon && (
-                      <span className="text-xs text-white/40">{category.icon}</span>
+                      <span className="text-xs text-white/70">{category.icon}</span>
                     )}
                     <span className="truncate font-mono">{category.name}</span>
                   </Link>
@@ -80,7 +80,7 @@ export default function Sidebar({ categories }: SidebarProps) {
           </div>
         )}
 
-        <div className="mt-auto pt-4 border-t border-white/5 text-[10px] text-white/40">
+        <div className="mt-auto pt-4 border-t border-white/5 text-[10px] text-white/70">
           <p className="font-mono">built by one dev · v0.1</p>
         </div>
       </div>

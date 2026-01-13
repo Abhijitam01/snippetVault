@@ -8,9 +8,11 @@ import SnippetList from '@/components/snippets/SnippetList';
 import { useSearch } from '@/lib/hooks/useSearch';
 import { useTags } from '@/lib/hooks/useTags';
 import { useAuth } from '@/lib/hooks/useAuth';
+import { useOnboarding } from '@/lib/hooks/useOnboarding';
 import Button from '@/components/ui/Button';
 import TagBadge from '@/components/ui/TagBadge';
 import StatsCard from '@/components/ui/StatsCard';
+import OnboardingModal from '@/components/onboarding/OnboardingModal';
 import type { Category, Tag } from '@/types';
 
 const LANGUAGES = [
@@ -25,6 +27,7 @@ export default function DashboardPage() {
   const { snippets, loading } = useSnippets();
   const { search, results, loading: searchLoading } = useSearch();
   const { tags } = useTags();
+  const { shouldShowOnboarding, isLoading: onboardingLoading, completeOnboarding } = useOnboarding();
   const [categories, setCategories] = useState<Category[]>([]);
   const [stats, setStats] = useState({
     totalSnippets: 0,
@@ -128,8 +131,8 @@ export default function DashboardPage() {
   // Show loading only while checking auth
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-gray-400">Loading...</div>
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-white/50 font-mono">Loading...</div>
       </div>
     );
   }
@@ -140,8 +143,15 @@ export default function DashboardPage() {
   }
 
   return (
-    <MainLayout categories={categories} onSearch={handleSearch}>
-      <div className="space-y-6">
+    <>
+      {!onboardingLoading && shouldShowOnboarding && (
+        <OnboardingModal
+          isOpen={shouldShowOnboarding}
+          onClose={completeOnboarding}
+        />
+      )}
+      <MainLayout categories={categories} onSearch={handleSearch}>
+        <div className="space-y-6">
         {/* Top row */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
@@ -256,5 +266,6 @@ export default function DashboardPage() {
         </section>
       </div>
     </MainLayout>
+    </>
   );
 }
