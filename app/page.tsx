@@ -361,7 +361,16 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8 py-6">
           <div className="flex items-center justify-between">
             <p className="text-xs font-mono text-white/40">
-              built by one dev · v0.1
+              built by{' '}
+              <a
+                href="https://github.com/Abhijitam01"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-white/60 hover:text-white transition-colors"
+              >
+                Abhijitam Dubey
+              </a>
+              {' '}· v0.1
             </p>
             <div className="flex items-center gap-6 text-xs font-mono text-white/40">
               <Link href="/dashboard" className="hover:text-white/60 transition-colors">

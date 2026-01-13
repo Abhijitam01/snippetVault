@@ -97,7 +97,7 @@ export default function CategoryPage() {
 
   return (
     <MainLayout categories={categories} onSearch={handleSearch}>
-      <div className="space-y-6">
+      <div className="space-y-6 animate-fade-in">
         <div className="flex items-center gap-4">
           <Link href="/dashboard">
             <Button variant="ghost" size="sm">
@@ -136,7 +136,9 @@ export default function CategoryPage() {
               <p className="text-xs text-white/50 font-mono">All snippets in this category</p>
             </div>
           </div>
-          <SnippetList snippets={snippets} loading={searchLoading} />
+          <div className="min-h-[200px] bg-black">
+            <SnippetList snippets={snippets} loading={searchLoading} />
+          </div>
         </section>
       </div>
     </MainLayout>
