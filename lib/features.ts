@@ -139,13 +139,13 @@ export async function hasFeature(
     custom_themes: config.customThemes || false,
     analytics: config.analytics || false,
     api_access: (config.apiCallsPerMonth ?? 0) > 0,
-    team_workspaces: config.teamWorkspaces || false,
-    shared_collections: config.sharedCollections || false,
-    role_based_permissions: config.roleBasedPermissions || false,
-    self_hosted: config.selfHosted || false,
-    sso: config.sso || false,
-    dedicated_support: config.dedicatedSupport || false,
-    custom_integrations: config.customIntegrations || false,
+    team_workspaces: ('teamWorkspaces' in config && config.teamWorkspaces) || false,
+    shared_collections: ('sharedCollections' in config && config.sharedCollections) || false,
+    role_based_permissions: ('roleBasedPermissions' in config && config.roleBasedPermissions) || false,
+    self_hosted: ('selfHosted' in config && config.selfHosted) || false,
+    sso: ('sso' in config && config.sso) || false,
+    dedicated_support: ('dedicatedSupport' in config && config.dedicatedSupport) || false,
+    custom_integrations: ('customIntegrations' in config && config.customIntegrations) || false,
   };
 
   return featureMap[feature] || false;

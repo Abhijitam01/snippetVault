@@ -8,6 +8,7 @@ import StatsCard from '@/components/ui/StatsCard';
 import { TrendingUp, Eye, Heart, Code2, Calendar } from 'lucide-react';
 import toast from 'react-hot-toast';
 import UpgradeBanner from '@/components/billing/UpgradeBanner';
+import type { Category } from '@/types';
 
 interface AnalyticsData {
   totalViews: number;
@@ -39,6 +40,7 @@ export default function AnalyticsPage() {
   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null);
   const [hasAccess, setHasAccess] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -46,6 +48,14 @@ export default function AnalyticsPage() {
       router.push('/auth/login');
     }
   }, [user, authLoading, router]);
+
+  // Fetch categories for MainLayout
+  useEffect(() => {
+    fetch('/api/categories')
+      .then((res) => res.json())
+      .then((data) => setCategories(data))
+      .catch((err) => console.error('Failed to fetch categories:', err));
+  }, []);
 
   // Fetch analytics data
   useEffect(() => {
@@ -81,6 +91,13 @@ export default function AnalyticsPage() {
     fetchAnalytics();
   }, [user]);
 
+  const handleSearch = (query: string) => {
+    // Navigate to dashboard with search query
+    if (query.trim()) {
+      router.push(`/dashboard?search=${encodeURIComponent(query)}`);
+    }
+  };
+
   // Show loading while checking auth
   if (authLoading || loading) {
     return (
@@ -98,7 +115,7 @@ export default function AnalyticsPage() {
   // If user doesn't have access, show upgrade banner
   if (!hasAccess) {
     return (
-      <MainLayout>
+      <MainLayout categories={categories} onSearch={handleSearch}>
         <div className="space-y-6">
           <div>
             <h1 className="text-2xl font-semibold text-white font-mono">
@@ -131,7 +148,7 @@ export default function AnalyticsPage() {
 
   if (!analytics) {
     return (
-      <MainLayout>
+      <MainLayout categories={categories} onSearch={handleSearch}>
         <div className="text-center text-white/50 font-mono">
           No analytics data available.
         </div>
@@ -140,7 +157,7 @@ export default function AnalyticsPage() {
   }
 
   return (
-    <MainLayout>
+    <MainLayout categories={categories} onSearch={handleSearch}>
       <div className="space-y-6">
         {/* Header */}
         <div>

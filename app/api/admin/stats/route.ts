@@ -60,13 +60,13 @@ export async function GET(request: NextRequest) {
       const tierConfig = SUBSCRIPTION_TIERS[tier];
 
       if (tier === 'pro') {
-        if (sub.billingPeriod === 'yearly') {
-          monthlyRecurringRevenue += tierConfig.priceYearly! / 12;
-        } else {
-          monthlyRecurringRevenue += tierConfig.priceMonthly!;
+        if (sub.billingPeriod === 'yearly' && 'priceYearly' in tierConfig) {
+          monthlyRecurringRevenue += (tierConfig as any).priceYearly / 12;
+        } else if ('priceMonthly' in tierConfig) {
+          monthlyRecurringRevenue += (tierConfig as any).priceMonthly;
         }
-      } else if (tier === 'team') {
-        monthlyRecurringRevenue += tierConfig.pricePerUser!;
+      } else if (tier === 'team' && 'pricePerUser' in tierConfig) {
+        monthlyRecurringRevenue += (tierConfig as any).pricePerUser;
       }
       // Enterprise pricing is custom, skip for now
     });

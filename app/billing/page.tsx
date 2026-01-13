@@ -9,6 +9,7 @@ import UsageProgress from '@/components/billing/UsageProgress';
 import Button from '@/components/ui/Button';
 import { CreditCard, Zap } from 'lucide-react';
 import toast from 'react-hot-toast';
+import type { Category } from '@/types';
 
 interface Plan {
   id: string;
@@ -45,6 +46,7 @@ export default function BillingPage() {
   const [usage, setUsage] = useState<UsageStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -52,6 +54,14 @@ export default function BillingPage() {
       router.push('/auth/login');
     }
   }, [user, authLoading, router]);
+
+  // Fetch categories for MainLayout
+  useEffect(() => {
+    fetch('/api/categories')
+      .then((res) => res.json())
+      .then((data) => setCategories(data))
+      .catch((err) => console.error('Failed to fetch categories:', err));
+  }, []);
 
   // Fetch plans and usage data
   useEffect(() => {
@@ -82,6 +92,13 @@ export default function BillingPage() {
 
     fetchData();
   }, [user]);
+
+  const handleSearch = (query: string) => {
+    // Navigate to dashboard with search query
+    if (query.trim()) {
+      router.push(`/dashboard?search=${encodeURIComponent(query)}`);
+    }
+  };
 
   const handleSelectPlan = async (priceId: string) => {
     if (!priceId) return;
@@ -153,7 +170,7 @@ export default function BillingPage() {
   const isPaidUser = currentTier !== 'free';
 
   return (
-    <MainLayout>
+    <MainLayout categories={categories} onSearch={handleSearch}>
       <div className="space-y-8">
         {/* Header */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -171,8 +188,9 @@ export default function BillingPage() {
               onClick={handleManageSubscription}
               disabled={checkoutLoading}
               variant="secondary"
-              leftIcon={<CreditCard className="w-4 h-4" />}
+              className="flex items-center gap-2"
             >
+              <CreditCard className="w-4 h-4" />
               Manage Subscription
             </Button>
           )}

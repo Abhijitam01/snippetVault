@@ -7,6 +7,7 @@ import MainLayout from '@/components/layout/MainLayout';
 import StatsCard from '@/components/ui/StatsCard';
 import { Users, DollarSign, TrendingUp, Award } from 'lucide-react';
 import toast from 'react-hot-toast';
+import type { Category } from '@/types';
 
 interface AdminStats {
   totalUsers: number;
@@ -28,6 +29,7 @@ export default function AdminPage() {
   const [stats, setStats] = useState<AdminStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [hasAccess, setHasAccess] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
 
   // Redirect if not authenticated
   useEffect(() => {
@@ -35,6 +37,14 @@ export default function AdminPage() {
       router.push('/auth/login');
     }
   }, [user, authLoading, router]);
+
+  // Fetch categories for MainLayout
+  useEffect(() => {
+    fetch('/api/categories')
+      .then((res) => res.json())
+      .then((data) => setCategories(data))
+      .catch((err) => console.error('Failed to fetch categories:', err));
+  }, []);
 
   // Fetch admin stats
   useEffect(() => {
@@ -71,6 +81,13 @@ export default function AdminPage() {
     fetchStats();
   }, [user, router]);
 
+  const handleSearch = (query: string) => {
+    // Navigate to dashboard with search query
+    if (query.trim()) {
+      router.push(`/dashboard?search=${encodeURIComponent(query)}`);
+    }
+  };
+
   // Show loading while checking auth
   if (authLoading || loading) {
     return (
@@ -87,7 +104,7 @@ export default function AdminPage() {
 
   if (!stats) {
     return (
-      <MainLayout>
+      <MainLayout categories={categories} onSearch={handleSearch}>
         <div className="text-center text-white/50 font-mono">
           No admin data available.
         </div>
@@ -104,7 +121,7 @@ export default function AdminPage() {
       : '0.0';
 
   return (
-    <MainLayout>
+    <MainLayout categories={categories} onSearch={handleSearch}>
       <div className="space-y-6">
         {/* Header */}
         <div>
