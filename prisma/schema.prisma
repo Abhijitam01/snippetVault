@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -19,12 +19,28 @@ model Snippet {
   notes       String?
   resources   String?
   isFavorite  Boolean  @default(false)
+  
+  // Sharing features
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  visibility  String   @default("public") // 'public', 'private', 'unlisted'
+  shortCode   String   @unique
+  viewCount   Int      @default(0)
+  forkedFrom  String?
+  forkedCount Int      @default(0)
+  
+  likes              Like[]
+  collectionSnippets CollectionSnippet[]
+  
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   @@index([language])
   @@index([isFavorite])
   @@index([categoryId])
+  @@index([userId])
+  @@index([visibility])
+  @@index([shortCode])
 }
 
 model Tag {
@@ -54,9 +70,63 @@ model User {
   password  String
   phone     String?  @unique
   name      String?
+  
+  // Profile fields
+  username  String?  @unique
+  bio       String?
+  avatar    String?
+  website   String?
+  githubUrl String?
+  twitterUrl String?
+  
+  snippets    Snippet[]
+  likes       Like[]
+  collections Collection[]
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([email])
   @@index([phone])
+  @@index([username])
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  userId    String
+  snippetId String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  snippet   Snippet  @relation(fields: [snippetId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, snippetId])
+  @@index([userId])
+  @@index([snippetId])
+}
+
+model Collection {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  isPublic    Boolean  @default(true)
+  snippets    CollectionSnippet[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model CollectionSnippet {
+  id           String     @id @default(uuid())
+  collectionId String
+  snippetId    String
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  snippet      Snippet    @relation(fields: [snippetId], references: [id], onDelete: Cascade)
+  addedAt      DateTime   @default(now())
+
+  @@unique([collectionId, snippetId])
+  @@index([collectionId])
+  @@index([snippetId])
 }

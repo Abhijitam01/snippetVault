@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { generateShortCode } from '../lib/shortcode';
 
 const prisma = new PrismaClient();
 
@@ -11,12 +12,17 @@ async function main() {
   await prisma.user.deleteMany();
 
   const hashedPassword = await bcrypt.hash('demo123', 10);
-  await prisma.user.create({
+  const demoUser = await prisma.user.create({
     data: {
       email: 'demo@snippetvault.com',
       password: hashedPassword,
       phone: '+1234567890',
       name: 'Demo User',
+      username: 'demouser',
+      bio: 'Passionate developer sharing useful code snippets',
+      avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=demo',
+      website: 'https://snippetvault.com',
+      githubUrl: 'https://github.com/demouser',
     },
   });
   console.log('✅ Demo user created!');
@@ -91,6 +97,9 @@ export function useLocalStorage<T>(key: string, initialValue: T) {
   return [storedValue, setValue] as const;
 }`,
       language: 'typescript',
+      userId: demoUser.id,
+      shortCode: generateShortCode(),
+      visibility: 'public',
       categoryId: webDev.id,
       tags: {
         connect: [{ id: reactTag.id }, { id: tsTag.id }],
@@ -142,6 +151,9 @@ export const errorHandler = (
   });
 };`,
       language: 'typescript',
+      userId: demoUser.id,
+      shortCode: generateShortCode(),
+      visibility: 'public',
       categoryId: webDev.id,
       tags: {
         connect: [{ id: nodeTag.id }, { id: tsTag.id }],
@@ -183,6 +195,9 @@ sorted_array = [1, 3, 5, 7, 9, 11, 13, 15]
 result = binary_search(sorted_array, 7)
 print(f"Found at index: {result}")  # Output: 3`,
       language: 'python',
+      userId: demoUser.id,
+      shortCode: generateShortCode(),
+      visibility: 'public',
       categoryId: algorithms.id,
       tags: {
         connect: [{ id: pythonTag.id }],
@@ -232,6 +247,9 @@ services:
 volumes:
   postgres_data:`,
       language: 'yaml',
+      userId: demoUser.id,
+      shortCode: generateShortCode(),
+      visibility: 'public',
       categoryId: devops.id,
       tags: {
         connect: [{ id: nodeTag.id }],
@@ -288,6 +306,9 @@ function SearchComponent() {
   );
 }`,
       language: 'typescript',
+      userId: demoUser.id,
+      shortCode: generateShortCode(),
+      visibility: 'public',
       categoryId: webDev.id,
       tags: {
         connect: [{ id: reactTag.id }, { id: tsTag.id }],

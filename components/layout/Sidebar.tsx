@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import Logo from '@/components/ui/Logo';
 import type { Category } from '@/types';
 
 interface SidebarProps {
@@ -20,10 +21,13 @@ export default function Sidebar({ categories }: SidebarProps) {
   return (
     <aside className="w-60 bg-black border-r border-white/10 h-screen overflow-y-auto">
       <div className="flex flex-col h-full px-4 py-4 gap-6">
-        <div className="space-y-1">
-          <h1 className="text-lg font-semibold text-white tracking-tight font-mono">SnippetVault</h1>
+        <Link href="/dashboard" className="space-y-1 block">
+          <div className="flex items-center gap-2">
+            <Logo size={20} />
+            <h1 className="text-lg font-semibold text-white tracking-tight font-mono">SnippetVault</h1>
+          </div>
           <p className="text-xs text-white/50 font-mono">Personal snippet vault</p>
-        </div>
+        </Link>
 
         <nav className="space-y-1 text-sm">
           {navItems.map((item) => {

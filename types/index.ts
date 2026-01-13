@@ -44,6 +44,7 @@ export interface SnippetFormData {
   notes?: string;
   resources: string[];
   isFavorite?: boolean;
+  visibility?: 'public' | 'private' | 'unlisted';
 }
 
 export interface CreateTagDTO {

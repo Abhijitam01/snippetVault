@@ -9,6 +9,7 @@ export const createSnippetSchema = z.object({
   categoryId: z.string().optional(),
   notes: z.string().optional(),
   resources: z.array(z.string().url()).optional(),
+  visibility: z.enum(['public', 'private', 'unlisted']).optional(),
 });
 
 export const updateSnippetSchema = createSnippetSchema.partial().extend({

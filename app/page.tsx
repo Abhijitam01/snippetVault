@@ -5,6 +5,8 @@ import { useAuth } from '@/lib/hooks/useAuth';
 import StatsCard from '@/components/ui/StatsCard';
 import { cn } from '@/lib/utils';
 import { Code2, FolderTree, Tag as TagIcon, Star, Sparkles, Zap, Lock, Search, FileText, Download, Upload, Palette, Keyboard } from 'lucide-react';
+import PublicSnippets from '@/components/home/PublicSnippets';
+import Logo from '@/components/ui/Logo';
 
 export default function HomePage() {
   const { user } = useAuth();
@@ -15,7 +17,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <Link href="/" className="inline-flex items-center gap-2 text-sm font-mono text-white/90 hover:text-white transition-colors">
-              <Code2 className="w-5 h-5 text-blue-500" />
+              <Logo size={20} />
               <span>SnippetVault</span>
             </Link>
             <nav className="flex items-center gap-4 text-sm font-mono">
@@ -320,6 +322,37 @@ export default function HomePage() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Recent Public Snippets */}
+      <section className="max-w-7xl mx-auto w-full px-6 lg:px-8 py-20 lg:py-32 border-t border-white/5">
+        <div className="text-center mb-16">
+          <div className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-1.5 mb-6">
+            <Code2 className="w-3.5 h-3.5 mr-2 text-blue-400" />
+            <span className="text-xs font-mono text-white/70">Explore</span>
+          </div>
+          <h2 className="text-3xl lg:text-4xl font-semibold text-white mb-4 font-mono">
+            Recent Code Snippets
+          </h2>
+          <p className="text-lg text-white/60 font-mono max-w-2xl mx-auto">
+            Discover and learn from code shared by the community
+          </p>
+        </div>
+
+        <PublicSnippets />
+
+        <div className="text-center mt-12">
+          <Link
+            href="/auth/signup"
+            className={cn(
+              'inline-flex items-center justify-center rounded-lg font-medium transition-all',
+              'h-11 px-6 text-base font-mono',
+              'bg-blue-600 text-white hover:bg-blue-700 border border-blue-500/50 shadow-lg shadow-blue-500/20'
+            )}
+          >
+            Join SnippetVault →
+          </Link>
         </div>
       </section>
 

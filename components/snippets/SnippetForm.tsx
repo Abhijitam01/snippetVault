@@ -39,6 +39,7 @@ export default function SnippetForm({
     notes: initialData?.notes || '',
     resources: initialData?.resources || [],
     isFavorite: initialData?.isFavorite || false,
+    visibility: initialData?.visibility || 'public',
   });
 
   const handleSubmit = (e: FormEvent) => {
@@ -108,6 +109,25 @@ export default function SnippetForm({
             ))}
           </select>
         </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium mb-2 text-gray-100">Visibility *</label>
+        <select
+          value={formData.visibility}
+          onChange={(e) => setFormData({ ...formData, visibility: e.target.value as 'public' | 'private' | 'unlisted' })}
+          className="w-full rounded-md border border-gray-700 bg-gray-800 text-gray-100 px-3 py-2 text-sm"
+          required
+        >
+          <option value="public">Public - Anyone can view and discover</option>
+          <option value="unlisted">Unlisted - Anyone with the link can view</option>
+          <option value="private">Private - Only you can view</option>
+        </select>
+        <p className="mt-1 text-xs text-gray-400">
+          {formData.visibility === 'public' && 'Your snippet will be visible to everyone and appear in public feeds'}
+          {formData.visibility === 'unlisted' && 'Your snippet can be shared via link but won\'t appear in public feeds'}
+          {formData.visibility === 'private' && 'Your snippet will only be visible to you'}
+        </p>
       </div>
 
       <div>

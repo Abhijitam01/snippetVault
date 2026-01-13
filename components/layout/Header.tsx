@@ -1,8 +1,10 @@
 'use client';
 
 import { useRef } from 'react';
+import Link from 'next/link';
 import SearchBar from '@/components/ui/SearchBar';
 import Button from '@/components/ui/Button';
+import Logo from '@/components/ui/Logo';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { LogOut } from 'lucide-react';
 import toast from 'react-hot-toast';
@@ -90,9 +92,10 @@ export default function Header({ onSearch }: HeaderProps) {
     <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-black/80 backdrop-blur-md">
       <div className="flex h-14 items-center justify-between gap-4 px-6 mx-auto w-full max-w-6xl">
         <div className="flex items-center gap-4 flex-1">
-          <span className="hidden sm:inline text-sm font-mono text-white/70">
-            SnippetVault
-          </span>
+          <Link href="/dashboard" className="hidden sm:flex items-center gap-2 text-sm font-mono text-white/70 hover:text-white transition-colors">
+            <Logo size={18} />
+            <span>SnippetVault</span>
+          </Link>
           <div className="flex-1 max-w-xl">
             <SearchBar onSearch={onSearch} />
           </div>

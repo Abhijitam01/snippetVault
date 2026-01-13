@@ -2,25 +2,33 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { updateSnippetSchema } from '@/lib/validations';
 import { ZodError } from 'zod';
+import { getUserFromRequest, getAccessibleSnippet } from '@/lib/middleware/auth';
 
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const snippet = await prisma.snippet.findUnique({
-      where: { id: params.id },
-      include: {
-        tags: true,
-        category: true,
-      },
-    });
+    const currentUser = await getUserFromRequest(request);
+    const snippet = await getAccessibleSnippet(params.id, currentUser?.userId);
 
     if (!snippet) {
       return NextResponse.json(
-        { error: 'Snippet not found' },
+        { error: 'Snippet not found or not accessible' },
         { status: 404 }
       );
+    }
+
+    // Increment view count for public/unlisted snippets
+    if (snippet.visibility !== 'private') {
+      await prisma.snippet.update({
+        where: { id: params.id },
+        data: {
+          viewCount: {
+            increment: 1,
+          },
+        },
+      });
     }
 
     return NextResponse.json(snippet);
@@ -38,6 +46,15 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
+    // Require authentication
+    const currentUser = await getUserFromRequest(request);
+    if (!currentUser) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const validatedData = updateSnippetSchema.parse(body);
 
@@ -52,6 +69,14 @@ export async function PUT(
       );
     }
 
+    // Check ownership
+    if (existing.userId !== currentUser.userId) {
+      return NextResponse.json(
+        { error: 'Not authorized to modify this snippet' },
+        { status: 403 }
+      );
+    }
+
     const updateData: {
       title?: string;
       description?: string | null;
@@ -61,6 +86,7 @@ export async function PUT(
       notes?: string | null;
       resources?: string | null;
       isFavorite?: boolean;
+      visibility?: string;
       tags?: { set: { id: string }[] };
     } = {};
     if (validatedData.title !== undefined) updateData.title = validatedData.title;
@@ -75,6 +101,7 @@ export async function PUT(
         : null;
     }
     if (validatedData.isFavorite !== undefined) updateData.isFavorite = validatedData.isFavorite;
+    if (validatedData.visibility !== undefined) updateData.visibility = validatedData.visibility;
     if (validatedData.tagIds !== undefined) {
       updateData.tags = {
         set: validatedData.tagIds.map((id) => ({ id })),
@@ -87,6 +114,19 @@ export async function PUT(
       include: {
         tags: true,
         category: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+            avatar: true,
+          },
+        },
+        _count: {
+          select: {
+            likes: true,
+          },
+        },
       },
     });
 
@@ -111,6 +151,15 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
+    // Require authentication
+    const currentUser = await getUserFromRequest(request);
+    if (!currentUser) {
+      return NextResponse.json(
+        { error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
     const snippet = await prisma.snippet.findUnique({
       where: { id: params.id },
     });
@@ -119,6 +168,14 @@ export async function DELETE(
       return NextResponse.json(
         { error: 'Snippet not found' },
         { status: 404 }
+      );
+    }
+
+    // Check ownership
+    if (snippet.userId !== currentUser.userId) {
+      return NextResponse.json(
+        { error: 'Not authorized to delete this snippet' },
+        { status: 403 }
       );
     }
 
