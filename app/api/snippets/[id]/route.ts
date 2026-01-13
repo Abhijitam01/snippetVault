@@ -1,10 +1,8 @@
-// app/api/snippets/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { updateSnippetSchema } from '@/lib/validations';
 import { ZodError } from 'zod';
 
-// GET /api/snippets/[id] - Get single snippet
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -35,7 +33,6 @@ export async function GET(
   }
 }
 
-// PUT /api/snippets/[id] - Update snippet
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -44,7 +41,6 @@ export async function PUT(
     const body = await request.json();
     const validatedData = updateSnippetSchema.parse(body);
 
-    // Check if snippet exists
     const existing = await prisma.snippet.findUnique({
       where: { id: params.id },
     });
@@ -110,7 +106,6 @@ export async function PUT(
   }
 }
 
-// DELETE /api/snippets/[id] - Delete snippet
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }

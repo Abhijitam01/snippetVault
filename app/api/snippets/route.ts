@@ -1,10 +1,8 @@
-// app/api/snippets/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { createSnippetSchema } from '@/lib/validations';
 import { ZodError } from 'zod';
 
-// GET /api/snippets - Get all snippets
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
@@ -37,7 +35,6 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/snippets - Create new snippet
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

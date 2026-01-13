@@ -1,10 +1,8 @@
-// app/api/categories/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { createCategorySchema } from '@/lib/validations';
 import { ZodError } from 'zod';
 
-// GET /api/categories - Get all categories
 export async function GET() {
   try {
     const categories = await prisma.category.findMany({
@@ -23,7 +21,6 @@ export async function GET() {
   }
 }
 
-// POST /api/categories - Create new category
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

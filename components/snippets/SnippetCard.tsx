@@ -1,9 +1,9 @@
-// components/snippets/SnippetCard.tsx
 'use client';
 
 import Link from 'next/link';
 import { cn, formatDate, truncate, getLanguageColor } from '@/lib/utils';
 import TagBadge from '@/components/ui/TagBadge';
+import { Star, Clock, Folder } from 'lucide-react';
 import type { Snippet } from '@/types';
 
 interface SnippetCardProps {
@@ -11,51 +11,77 @@ interface SnippetCardProps {
 }
 
 export default function SnippetCard({ snippet }: SnippetCardProps) {
+  const languageColor = getLanguageColor(snippet.language);
+
   return (
     <Link
       href={`/snippets/${snippet.id}`}
-      className="block p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow"
+      className="group relative block overflow-hidden rounded-xl border border-white/10 bg-black/40 backdrop-blur-sm p-5 transition-all duration-300 hover:scale-[1.02] hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/20"
     >
-      <div className="flex items-start justify-between mb-2">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-          {snippet.title}
-          {snippet.isFavorite && <span className="ml-2">⭐</span>}
-        </h3>
-        <span
-          className="px-2 py-1 text-xs font-medium rounded"
-          style={{
-            backgroundColor: `${getLanguageColor(snippet.language)}20`,
-            color: getLanguageColor(snippet.language),
-          }}
-        >
-          {snippet.language}
-        </span>
-      </div>
+      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+      
+      <div className="relative z-10">
+        <div className="flex items-start justify-between mb-3">
+          <h3 className="text-lg font-semibold text-white group-hover:text-gray-50 transition-colors pr-2 font-mono">
+            {truncate(snippet.title, 40)}
+          </h3>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            {snippet.isFavorite && (
+              <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+            )}
+            <span
+              className="px-2.5 py-1 text-xs font-semibold rounded-lg border backdrop-blur-sm transition-all font-mono"
+              style={{
+                backgroundColor: `${languageColor}15`,
+                borderColor: `${languageColor}40`,
+                color: languageColor,
+              }}
+            >
+              {snippet.language}
+            </span>
+          </div>
+        </div>
 
-      {snippet.description && (
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
-          {truncate(snippet.description, 100)}
-        </p>
-      )}
-
-      <div className="flex flex-wrap gap-2 mb-3">
-        {snippet.tags.slice(0, 3).map((tag) => (
-          <TagBadge key={tag.id} tag={tag} />
-        ))}
-        {snippet.tags.length > 3 && (
-          <span className="text-xs text-gray-500">+{snippet.tags.length - 3} more</span>
+        {snippet.description && (
+          <p className="text-sm text-white/60 mb-4 line-clamp-2 group-hover:text-white/80 transition-colors font-mono">
+            {truncate(snippet.description, 100)}
+          </p>
         )}
-      </div>
 
-      <div className="flex items-center justify-between text-xs text-gray-500">
-        <span>{formatDate(snippet.updatedAt)}</span>
-        {snippet.category && (
-          <span className="flex items-center gap-1">
-            {snippet.category.icon && <span>{snippet.category.icon}</span>}
-            {snippet.category.name}
-          </span>
+        {snippet.tags.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {snippet.tags.slice(0, 3).map((tag) => (
+              <TagBadge key={tag.id} tag={tag} />
+            ))}
+            {snippet.tags.length > 3 && (
+              <span className="inline-flex items-center px-2 py-1 text-xs font-medium text-gray-500 bg-gray-800/50 rounded-md border border-gray-700">
+                +{snippet.tags.length - 3}
+              </span>
+            )}
+          </div>
         )}
+
+        <div className="flex items-center justify-between text-xs text-white/50 pt-3 border-t border-white/10 font-mono">
+          <div className="flex items-center gap-1.5">
+            <Clock className="w-3.5 h-3.5" />
+            <span>{formatDate(snippet.updatedAt)}</span>
+          </div>
+          {snippet.category && (
+            <div className="flex items-center gap-1.5">
+              <Folder className="w-3.5 h-3.5" />
+              {snippet.category.icon && <span className="text-xs">{snippet.category.icon}</span>}
+              <span className="font-medium">{snippet.category.name}</span>
+            </div>
+          )}
+        </div>
       </div>
+      
+      <div 
+        className="absolute top-0 right-0 w-20 h-20 rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+        style={{
+          background: `radial-gradient(circle at top right, ${languageColor}20, transparent 70%)`
+        }}
+      />
     </Link>
   );
 }

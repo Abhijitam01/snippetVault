@@ -1,8 +1,6 @@
-// app/api/import/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-// POST /api/import - Import snippets from JSON
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();

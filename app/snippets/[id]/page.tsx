@@ -1,4 +1,3 @@
-// app/snippets/[id]/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -23,7 +22,7 @@ export default function SnippetPage() {
       .then(setSnippet)
       .catch(() => {
         toast.error('Failed to load snippet');
-        router.push('/');
+        router.push('/dashboard');
       });
 
     fetch('/api/categories')
@@ -40,7 +39,7 @@ export default function SnippetPage() {
       try {
         await deleteSnippet(id);
         toast.success('Snippet deleted');
-        router.push('/');
+        router.push('/dashboard');
       } catch {
         toast.error('Failed to delete snippet');
       }

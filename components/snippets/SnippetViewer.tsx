@@ -1,4 +1,3 @@
-// components/snippets/SnippetViewer.tsx
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -25,41 +24,53 @@ export default function SnippetViewer({ snippet, onEdit, onDelete }: SnippetView
       try {
         switch (prismLang) {
           case 'typescript':
+            // @ts-ignore
             await import('prismjs/components/prism-typescript');
             break;
           case 'javascript':
+            // @ts-ignore
             await import('prismjs/components/prism-javascript');
             break;
           case 'python':
+            // @ts-ignore
             await import('prismjs/components/prism-python');
             break;
           case 'java':
+            // @ts-ignore
             await import('prismjs/components/prism-java');
             break;
           case 'cpp':
           case 'c++':
+            // @ts-ignore
             await import('prismjs/components/prism-cpp');
             break;
           case 'c':
+            // @ts-ignore
             await import('prismjs/components/prism-c');
             break;
           case 'go':
+            // @ts-ignore
             await import('prismjs/components/prism-go');
             break;
           case 'rust':
+            // @ts-ignore
             await import('prismjs/components/prism-rust');
             break;
           case 'sql':
+            // @ts-ignore
             await import('prismjs/components/prism-sql');
             break;
           case 'bash':
           case 'shell':
+            // @ts-ignore
             await import('prismjs/components/prism-bash');
             break;
           case 'yaml':
+            // @ts-ignore
             await import('prismjs/components/prism-yaml');
             break;
           case 'json':
+            // @ts-ignore
             await import('prismjs/components/prism-json');
             break;
           default:
@@ -87,13 +98,13 @@ export default function SnippetViewer({ snippet, onEdit, onDelete }: SnippetView
     <div className="space-y-6">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2 font-mono">
             {snippet.title}
             {snippet.isFavorite && <span className="ml-2">⭐</span>}
           </h1>
-          <div className="flex items-center gap-4 text-sm text-gray-500">
+          <div className="flex items-center gap-4 text-sm text-gray-500 font-mono">
             <span
-              className="px-2 py-1 text-xs font-medium rounded"
+              className="px-2 py-1 text-xs font-medium rounded font-mono"
               style={{
                 backgroundColor: `${getLanguageColor(snippet.language)}20`,
                 color: getLanguageColor(snippet.language),
@@ -115,7 +126,7 @@ export default function SnippetViewer({ snippet, onEdit, onDelete }: SnippetView
       </div>
 
       {snippet.description && (
-        <p className="text-gray-700 dark:text-gray-300">{snippet.description}</p>
+        <p className="text-gray-700 dark:text-gray-300 font-mono">{snippet.description}</p>
       )}
 
       {snippet.tags.length > 0 && (
@@ -128,7 +139,7 @@ export default function SnippetViewer({ snippet, onEdit, onDelete }: SnippetView
 
       <div className="bg-gray-900 rounded-lg p-4 relative">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-gray-400">{snippet.language}</span>
+          <span className="text-sm text-gray-400 font-mono">{snippet.language}</span>
           <Button size="sm" variant="ghost" onClick={copyCode}>
             {copied ? 'Copied!' : 'Copy'}
           </Button>

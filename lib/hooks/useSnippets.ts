@@ -1,4 +1,3 @@
-// lib/hooks/useSnippets.ts
 'use client';
 
 import { useState, useEffect } from 'react';

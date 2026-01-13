@@ -1,4 +1,3 @@
-// lib/hooks/useSearch.ts
 'use client';
 
 import { useState } from 'react';
@@ -13,6 +12,18 @@ export function useSearch() {
     try {
       setLoading(true);
       setError(null);
+      
+      // If no search params at all, clear results
+      const hasAnyParams = params.query || params.language || params.categoryId || 
+                          (params.tagIds && params.tagIds.length > 0) || 
+                          params.isFavorite !== undefined;
+      
+      if (!hasAnyParams) {
+        setResults([]);
+        setLoading(false);
+        return;
+      }
+
       const queryParams = new URLSearchParams();
       if (params.query) queryParams.append('query', params.query);
       if (params.language) queryParams.append('language', params.language);

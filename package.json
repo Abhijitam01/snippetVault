@@ -13,7 +13,9 @@
   },
   "dependencies": {
     "@prisma/client": "^5.14.0",
+    "bcryptjs": "^3.0.3",
     "clsx": "^2.1.0",
+    "jsonwebtoken": "^9.0.3",
     "lucide-react": "^0.378.0",
     "next": "14.2.0",
     "prismjs": "^1.29.0",
@@ -27,7 +29,9 @@
   },
   "devDependencies": {
     "@prisma/adapter-better-sqlite3": "^7.2.0",
+    "@types/bcryptjs": "^3.0.0",
     "@types/better-sqlite3": "^7.6.13",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20.12.0",
     "@types/prismjs": "^1.26.3",
     "@types/react": "^18.3.0",

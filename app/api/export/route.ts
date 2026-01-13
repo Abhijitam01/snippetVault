@@ -1,8 +1,6 @@
-// app/api/export/route.ts
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-// GET /api/export - Export all snippets as JSON
 export async function GET() {
   try {
     const snippets = await prisma.snippet.findMany({

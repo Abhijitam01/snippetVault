@@ -1,4 +1,3 @@
-// components/snippets/SnippetForm.tsx
 'use client';
 
 import { useState, FormEvent } from 'react';

@@ -1,8 +1,6 @@
-// app/api/search/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
-// GET /api/search - Search snippets with filters
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;
@@ -22,12 +20,14 @@ export async function GET(request: NextRequest) {
     } = {};
 
     // Text search in title, description, code, and notes
+    // SQLite doesn't support mode: 'insensitive', but contains works case-insensitively for most cases
     if (query && query.trim()) {
+      const searchQuery = query.trim();
       where.OR = [
-        { title: { contains: query, mode: 'insensitive' } },
-        { description: { contains: query, mode: 'insensitive' } },
-        { code: { contains: query, mode: 'insensitive' } },
-        { notes: { contains: query, mode: 'insensitive' } },
+        { title: { contains: searchQuery } },
+        { description: { contains: searchQuery } },
+        { code: { contains: searchQuery } },
+        { notes: { contains: searchQuery } },
       ];
     }
 

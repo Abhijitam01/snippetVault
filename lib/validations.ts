@@ -1,4 +1,3 @@
-// lib/validations.ts
 import { z } from 'zod';
 
 export const createSnippetSchema = z.object({
@@ -31,7 +30,6 @@ export const updateCategorySchema = createCategorySchema.partial();
 
 export const updateTagSchema = createTagSchema.partial();
 
-// Aliases for backward compatibility (deprecated - use create/update versions)
 export const snippetSchema = createSnippetSchema;
 export const categorySchema = createCategorySchema;
 export const tagSchema = createTagSchema;

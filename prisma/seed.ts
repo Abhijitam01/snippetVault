@@ -1,16 +1,26 @@
-// prisma/seed.ts
 import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  // Clear existing data
   await prisma.snippet.deleteMany();
   await prisma.tag.deleteMany();
   await prisma.category.deleteMany();
+  await prisma.user.deleteMany();
 
-  // Create categories
+  const hashedPassword = await bcrypt.hash('demo123', 10);
+  await prisma.user.create({
+    data: {
+      email: 'demo@snippetvault.com',
+      password: hashedPassword,
+      phone: '+1234567890',
+      name: 'Demo User',
+    },
+  });
+  console.log('✅ Demo user created!');
+
   const webDev = await prisma.category.create({
     data: {
       name: 'Web Development',
@@ -35,7 +45,6 @@ async function main() {
     },
   });
 
-  // Create tags
   const reactTag = await prisma.tag.create({
     data: { name: 'React', color: '#61DAFB' },
   });
@@ -52,7 +61,6 @@ async function main() {
     data: { name: 'Python', color: '#3776AB' },
   });
 
-  // Create sample snippets
   await prisma.snippet.create({
     data: {
       title: 'React Custom Hook - useLocalStorage',

@@ -1,10 +1,10 @@
-// app/snippets/[id]/edit/page.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useSnippets } from '@/lib/hooks/useSnippets';
 import { useTags } from '@/lib/hooks/useTags';
+import MainLayout from '@/components/layout/MainLayout';
 import SnippetForm from '@/components/snippets/SnippetForm';
 import type { SnippetFormData, Category } from '@/types';
 import toast from 'react-hot-toast';
@@ -59,7 +59,7 @@ export default function EditSnippetPage() {
           })
           .catch(() => {
             toast.error('Failed to load snippet');
-            router.push('/');
+            router.push('/dashboard');
           });
       }
     }
@@ -68,7 +68,7 @@ export default function EditSnippetPage() {
   const handleSubmit = async (data: SnippetFormData) => {
     try {
       setLoading(true);
-      await updateSnippet(id, data);
+      await updateSnippet(id, data as any);
       toast.success('Snippet updated successfully!');
       router.push(`/snippets/${id}`);
     } catch {
@@ -79,21 +79,29 @@ export default function EditSnippetPage() {
   };
 
   if (!initialData) {
-    return <div>Loading...</div>;
+    return (
+      <MainLayout categories={categories} onSearch={() => {}}>
+        <div className="max-w-4xl mx-auto">Loading...</div>
+      </MainLayout>
+    );
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Edit Snippet</h1>
-      <SnippetForm
-        initialData={initialData}
-        tags={tags}
-        categories={categories}
-        onSubmit={handleSubmit}
-        onCancel={() => router.back()}
-        loading={loading}
-      />
-    </div>
+    <MainLayout categories={categories} onSearch={() => {}}>
+      <div className="max-w-4xl mx-auto space-y-6">
+        <div>
+          <h1 className="text-2xl font-semibold text-white">Edit snippet</h1>
+          <p className="mt-1 text-sm text-white/60">Tweak the code or metadata, then save.</p>
+        </div>
+        <SnippetForm
+          initialData={initialData}
+          tags={tags}
+          categories={categories}
+          onSubmit={handleSubmit}
+          onCancel={() => router.back()}
+          loading={loading}
+        />
+      </div>
+    </MainLayout>
   );
 }
-

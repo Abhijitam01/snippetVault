@@ -1,4 +1,3 @@
-// components/layout/Sidebar.tsx
 'use client';
 
 import Link from 'next/link';
@@ -14,42 +13,45 @@ export default function Sidebar({ categories }: SidebarProps) {
   const pathname = usePathname();
 
   const navItems = [
-    { href: '/', label: 'All Snippets', icon: '📝' },
-    { href: '/snippets/new', label: 'New Snippet', icon: '➕' },
+    { href: '/dashboard', label: 'All snippets' },
+    { href: '/snippets/new', label: 'New snippet' },
   ];
 
   return (
-    <aside className="w-64 bg-gray-50 dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 h-screen overflow-y-auto">
-      <div className="p-4">
-        <h1 className="text-2xl font-bold mb-6">Snippet Vault</h1>
-        
-        <nav className="space-y-1">
+    <aside className="w-60 bg-black border-r border-white/10 h-screen overflow-y-auto">
+      <div className="flex flex-col h-full px-4 py-4 gap-6">
+        <div className="space-y-1">
+          <h1 className="text-lg font-semibold text-white tracking-tight font-mono">SnippetVault</h1>
+          <p className="text-xs text-white/50 font-mono">Personal snippet vault</p>
+        </div>
+
+        <nav className="space-y-1 text-sm">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                className={cn(
-                  'flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors',
-                  isActive
-                    ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
-                    : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
-                )}
-              >
-                <span>{item.icon}</span>
-                {item.label}
+                    className={cn(
+                      'flex items-center gap-2 rounded-md px-3 py-2 transition-colors font-mono',
+                      isActive
+                        ? 'bg-white/10 text-white border-l-2 border-l-blue-500'
+                        : 'text-white/60 hover:text-white hover:bg-white/5'
+                    )}
+                  >
+                    <span className="text-xs font-mono text-white/40">//</span>
+                    <span className="font-mono">{item.label}</span>
               </Link>
             );
           })}
         </nav>
 
         {categories.length > 0 && (
-          <div className="mt-8">
-            <h2 className="px-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+          <div className="mt-2 space-y-2">
+            <h2 className="px-3 text-[10px] font-semibold text-white/40 uppercase tracking-[0.16em]">
               Categories
             </h2>
-            <nav className="space-y-1">
+            <nav className="space-y-1 text-sm">
               {categories.map((category) => {
                 const isActive = pathname === `/categories/${category.id}`;
                 return (
@@ -57,20 +59,26 @@ export default function Sidebar({ categories }: SidebarProps) {
                     key={category.id}
                     href={`/categories/${category.id}`}
                     className={cn(
-                      'flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors',
+                      'flex items-center gap-2 rounded-md px-3 py-2 transition-colors font-mono',
                       isActive
-                        ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
-                        : 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800'
+                        ? 'bg-white/10 text-white border-l-2 border-l-blue-500'
+                        : 'text-white/60 hover:text-white hover:bg-white/5'
                     )}
                   >
-                    {category.icon && <span>{category.icon}</span>}
-                    {category.name}
+                    {category.icon && (
+                      <span className="text-xs text-white/40">{category.icon}</span>
+                    )}
+                    <span className="truncate font-mono">{category.name}</span>
                   </Link>
                 );
               })}
             </nav>
           </div>
         )}
+
+        <div className="mt-auto pt-4 border-t border-white/5 text-[10px] text-white/40">
+          <p className="font-mono">built by one dev · v0.1</p>
+        </div>
       </div>
     </aside>
   );

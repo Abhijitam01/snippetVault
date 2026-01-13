@@ -1,10 +1,8 @@
-// app/api/categories/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { updateCategorySchema } from '@/lib/validations';
 import { ZodError } from 'zod';
 
-// GET /api/categories/[id] - Get single category
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -38,7 +36,6 @@ export async function GET(
   }
 }
 
-// PUT /api/categories/[id] - Update category
 export async function PUT(
   request: NextRequest,
   { params }: { params: { id: string } }
@@ -77,7 +74,6 @@ export async function PUT(
   }
 }
 
-// DELETE /api/categories/[id] - Delete category
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }

@@ -1,4 +1,3 @@
-// components/snippets/SnippetEditor.tsx
 'use client';
 
 import SnippetForm from './SnippetForm';

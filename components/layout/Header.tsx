@@ -1,9 +1,10 @@
-// components/layout/Header.tsx
 'use client';
 
 import { useRef } from 'react';
 import SearchBar from '@/components/ui/SearchBar';
 import Button from '@/components/ui/Button';
+import { useAuth } from '@/lib/hooks/useAuth';
+import { LogOut } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 interface HeaderProps {
@@ -12,6 +13,7 @@ interface HeaderProps {
 
 export default function Header({ onSearch }: HeaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { logout, user } = useAuth();
 
   const handleExport = async () => {
     try {
@@ -47,7 +49,6 @@ export default function Header({ onSearch }: HeaderProps) {
       const text = await file.text();
       const data = JSON.parse(text);
       
-      // Handle both formats: { snippets: [] } or just []
       const snippets = Array.isArray(data) ? data : data.snippets || [];
       
       if (!Array.isArray(snippets)) {
@@ -65,32 +66,54 @@ export default function Header({ onSearch }: HeaderProps) {
       const result = await response.json();
       toast.success(`Imported ${result.imported} snippet(s) successfully!`);
       
-      // Refresh the page to show imported snippets
       window.location.reload();
     } catch (error) {
       console.error('Import error:', error);
       toast.error('Failed to import snippets. Please check the file format.');
     } finally {
-      // Reset file input
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toast.success('Logged out successfully');
+    } catch (error) {
+      toast.error('Failed to logout');
+    }
+  };
+
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-gray-700 bg-gray-900">
-      <div className="flex h-16 items-center gap-4 px-6">
-        <div className="flex-1">
-          <SearchBar onSearch={onSearch} />
+    <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-black/80 backdrop-blur-md">
+      <div className="flex h-14 items-center justify-between gap-4 px-6 mx-auto w-full max-w-6xl">
+        <div className="flex items-center gap-4 flex-1">
+          <span className="hidden sm:inline text-sm font-mono text-white/70">
+            SnippetVault
+          </span>
+          <div className="flex-1 max-w-xl">
+            <SearchBar onSearch={onSearch} />
+          </div>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={handleExport}>
-            Export
-          </Button>
-          <Button variant="outline" size="sm" onClick={handleImport}>
-            Import
-          </Button>
+        <div className="flex items-center gap-3">
+          {user && (
+            <div className="hidden sm:block text-xs font-mono text-white/50 font-mono">
+              {user.email}
+            </div>
+          )}
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={handleExport}>
+              Export
+            </Button>
+            <Button variant="outline" size="sm" onClick={handleImport}>
+              Import
+            </Button>
+            <Button variant="ghost" size="sm" onClick={handleLogout} title="Logout">
+              <LogOut className="w-4 h-4" />
+            </Button>
+          </div>
           <input
             ref={fileInputRef}
             type="file"
