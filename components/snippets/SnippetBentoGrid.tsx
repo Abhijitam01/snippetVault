@@ -4,7 +4,8 @@ import { useEffect, useRef, memo } from 'react';
 import Link from 'next/link';
 import { cn, formatDate, truncate, getLanguageColor } from '@/lib/utils';
 import TagBadge from '@/components/ui/TagBadge';
-import { Star, Clock, Folder, Code2, FileCode } from 'lucide-react';
+import { Star, Clock, Folder, Code2, FileCode, Share2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import type { Snippet } from '@/types';
 
 interface SnippetBentoGridProps {
@@ -161,6 +162,28 @@ const SnippetBentoGrid = memo(function SnippetBentoGrid({
                   </h3>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      const shareUrl = snippet.shortCode 
+                        ? `${window.location.origin}/s/${snippet.shortCode}`
+                        : `${window.location.origin}/snippets/${snippet.id}`;
+                      navigator.clipboard.writeText(shareUrl);
+                      toast.success('Link copied to clipboard!', {
+                        duration: 2000,
+                        style: {
+                          background: '#000',
+                          color: '#fff',
+                          border: '1px solid rgba(255, 255, 255, 0.1)',
+                        },
+                      });
+                    }}
+                    className="p-1.5 rounded-md bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all opacity-0 group-hover:opacity-100 relative z-20"
+                    title="Share snippet"
+                  >
+                    <Share2 className="w-4 h-4" />
+                  </button>
                   {snippet.isFavorite && (
                     <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 animate-pulse" />
                   )}

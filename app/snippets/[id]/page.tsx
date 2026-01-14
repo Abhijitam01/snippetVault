@@ -51,7 +51,7 @@ export default function SnippetPage() {
 
   return (
     <MainLayout onSearch={() => {}}>
-      <SnippetViewer snippet={snippet} onEdit={handleEdit} onDelete={handleDelete} />
+      <SnippetViewer snippet={snippet} onEdit={handleEdit} onDelete={handleDelete} shareMode={true} />
     </MainLayout>
   );
 }

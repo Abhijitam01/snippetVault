@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Home, Plus, FolderOpen, Search } from 'lucide-react';
+import { Home, Plus, Settings, Search } from 'lucide-react';
 
 export default function MobileNav() {
   const pathname = usePathname();
@@ -11,7 +11,7 @@ export default function MobileNav() {
   const navItems = [
     { href: '/dashboard', label: 'Dashboard', icon: Home },
     { href: '/snippets/new', label: 'New', icon: Plus },
-    { href: '/collections', label: 'Collections', icon: FolderOpen },
+    { href: '/settings/profile', label: 'Settings', icon: Settings },
     { href: '/dashboard', label: 'Search', icon: Search },
   ];
 
