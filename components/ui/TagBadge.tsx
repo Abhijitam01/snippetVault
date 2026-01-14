@@ -8,19 +8,18 @@ interface TagBadgeProps {
 }
 
 export default function TagBadge({ tag, onClick, className }: TagBadgeProps) {
-  const tagColor = tag.color || '#3b82f6';
+  const tagColor = tag.color || '#6366f1';
   
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-md px-2.5 py-1 text-xs font-medium border backdrop-blur-sm transition-all',
-        onClick && 'hover:scale-105',
+        'inline-flex items-center rounded-md px-2.5 py-1 text-xs font-medium font-mono border backdrop-blur-sm transition-all bg-zinc-900/80',
+        onClick && 'hover:scale-105 cursor-pointer',
         className
       )}
       style={{
-        backgroundColor: tagColor === '#3b82f6' ? 'rgba(59, 130, 246, 0.1)' : `${tagColor}15`,
-        borderColor: tagColor === '#3b82f6' ? 'rgba(59, 130, 246, 0.3)' : `${tagColor}40`,
-        color: tagColor === '#3b82f6' ? '#60a5fa' : tagColor,
+        borderColor: `${tagColor}60`,
+        color: tagColor,
       }}
       onClick={onClick}
     >

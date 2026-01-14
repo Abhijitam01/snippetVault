@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { cn, formatDate, truncate, getLanguageColor } from '@/lib/utils';
 import TagBadge from '@/components/ui/TagBadge';
-import { Star, Clock } from 'lucide-react';
+import { Star, Clock, Share2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import type { Snippet } from '@/types';
 
 interface SnippetCardProps {
@@ -13,12 +14,31 @@ interface SnippetCardProps {
 export default function SnippetCard({ snippet }: SnippetCardProps) {
   const languageColor = getLanguageColor(snippet.language);
 
+  const handleShare = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    const shareUrl = snippet.shortCode 
+      ? `${window.location.origin}/s/${snippet.shortCode}`
+      : `${window.location.origin}/snippets/${snippet.id}`;
+    
+    navigator.clipboard.writeText(shareUrl);
+    toast.success('Link copied to clipboard!', {
+      duration: 2000,
+      style: {
+        background: '#000',
+        color: '#fff',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+      },
+    });
+  };
+
   return (
-    <Link
-      href={`/snippets/${snippet.id}`}
-      className="group relative block overflow-hidden rounded-xl border border-white/10 bg-black/40 backdrop-blur-sm p-5 transition-all duration-300 hover:scale-[1.02] hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/20"
+    <div className="group relative block overflow-hidden rounded-xl border border-white/10 bg-black/40 backdrop-blur-sm p-5 transition-all duration-300 hover:scale-[1.02] hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/20"
     >
       <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+      
+      <Link href={`/snippets/${snippet.id}`} className="absolute inset-0 z-0" />
       
       <div className="relative z-10">
         <div className="flex items-start justify-between mb-3">
@@ -26,6 +46,13 @@ export default function SnippetCard({ snippet }: SnippetCardProps) {
             {truncate(snippet.title, 40)}
           </h3>
           <div className="flex items-center gap-2 flex-shrink-0">
+            <button
+              onClick={handleShare}
+              className="p-1.5 rounded-md bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all opacity-0 group-hover:opacity-100 relative z-20"
+              title="Share snippet"
+            >
+              <Share2 className="w-4 h-4" />
+            </button>
             {snippet.isFavorite && (
               <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
             )}
@@ -75,7 +102,7 @@ export default function SnippetCard({ snippet }: SnippetCardProps) {
           background: `radial-gradient(circle at top right, ${languageColor}20, transparent 70%)`
         }}
       />
-    </Link>
+    </div>
   );
 }
 

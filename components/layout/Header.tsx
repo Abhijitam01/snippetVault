@@ -93,31 +93,33 @@ export default function Header({ onSearch, searchInputRef }: HeaderProps) {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-black/80 backdrop-blur-md">
-      <div className="flex h-14 items-center justify-between gap-4 px-6 mx-auto w-full max-w-6xl">
-        <div className="flex items-center gap-4 flex-1">
-          <Link href="/dashboard" className="hidden sm:flex items-center gap-2 text-sm font-mono text-white/70 hover:text-white transition-colors">
+      <div className="flex h-14 items-center justify-between gap-2 px-4 sm:px-6 mx-auto w-full max-w-6xl">
+        <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
+          <Link href="/dashboard" className="flex sm:flex items-center gap-2 text-sm font-mono text-white/70 hover:text-white transition-colors flex-shrink-0">
             <Logo size={18} />
-            <span>SnippetVault</span>
+            <span className="hidden md:inline">SnippetVault</span>
           </Link>
           <div className="flex-1 max-w-xl">
-            <SearchBar ref={searchInputRef} onSearch={onSearch} />
+            <SearchBar ref={searchInputRef} onSearch={onSearch} showHelp={false} />
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1 sm:gap-3 flex-shrink-0">
           {user && (
             <Link 
               href="/settings/profile"
-              className="hidden sm:block text-xs font-mono text-white/50 hover:text-white/80 transition-colors cursor-pointer"
+              className="hidden lg:block text-xs font-mono text-white/50 hover:text-white/80 transition-colors cursor-pointer"
             >
               {user.email}
             </Link>
           )}
-          <div className="flex items-center gap-2">
-            <ThemeToggle />
-            <Button variant="outline" size="sm" onClick={handleExport}>
+          <div className="flex items-center gap-1 sm:gap-2">
+            <div className="hidden sm:block">
+              <ThemeToggle />
+            </div>
+            <Button variant="outline" size="sm" onClick={handleExport} className="hidden md:flex">
               Export
             </Button>
-            <Button variant="outline" size="sm" onClick={handleImport}>
+            <Button variant="outline" size="sm" onClick={handleImport} className="hidden md:flex">
               Import
             </Button>
             <Button variant="ghost" size="sm" onClick={handleLogout} title="Logout">

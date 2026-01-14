@@ -141,7 +141,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Filters */}
-        <section className="rounded-lg border border-white/10 bg-black/40 p-4 md:p-5">
+        <section className="rounded-lg border border-white/10 bg-zinc-950/80 p-4 md:p-5 backdrop-blur-sm">
           <div className="flex items-center justify-between gap-3 mb-4">
             <div>
               <h2 className="text-sm font-semibold text-white font-mono">Filters</h2>
@@ -159,11 +159,11 @@ export default function DashboardPage() {
             <select
               value={filters.language}
               onChange={(e) => setFilters({ ...filters, language: e.target.value })}
-              className="w-full rounded-md border border-white/10 bg-black/60 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500/60 focus:border-blue-500/60"
+              className="w-full rounded-md border border-white/10 bg-zinc-900/90 px-3 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500/60 focus:border-blue-500/60 font-mono"
             >
               <option value="">All languages</option>
               {LANGUAGES.map((lang) => (
-                <option key={lang} value={lang} className="bg-black">
+                <option key={lang} value={lang} className="bg-zinc-900">
                   {lang}
                 </option>
               ))}
@@ -179,10 +179,10 @@ export default function DashboardPage() {
                     key={tag.id}
                     type="button"
                     onClick={() => toggleTag(tag.id)}
-                    className={`transition-opacity ${
+                    className={`transition-all ${
                       filters.tagIds.includes(tag.id)
-                        ? 'opacity-100'
-                        : 'opacity-60 hover:opacity-80'
+                        ? 'opacity-100 scale-105'
+                        : 'opacity-70 hover:opacity-100 hover:scale-105'
                     }`}
                   >
                     <TagBadge tag={tag} />
@@ -192,13 +192,13 @@ export default function DashboardPage() {
             </div>
           )}
 
-          <div className="mt-4">
-            <label className="inline-flex items-center gap-2 text-sm text-white/80 cursor-pointer">
+          <div className="mt-4 pt-4 border-t border-white/10">
+            <label className="inline-flex items-center gap-2 text-sm text-white/80 cursor-pointer font-mono hover:text-white transition-colors">
               <input
                 type="checkbox"
                 checked={filters.isFavorite}
                 onChange={(e) => setFilters({ ...filters, isFavorite: e.target.checked })}
-                className="h-4 w-4 rounded border-white/20 bg-black/60 text-blue-500 focus:ring-blue-500/60"
+                className="h-4 w-4 rounded border-white/20 bg-zinc-900/90 text-blue-500 focus:ring-blue-500/60"
               />
               <span>Favorites only</span>
             </label>
