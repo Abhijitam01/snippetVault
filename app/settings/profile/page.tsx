@@ -34,7 +34,11 @@ export default function ProfileSettingsPage() {
     if (user) {
       // Fetch current profile data
       fetch('/api/user/profile')
-        .then((res) => res.json())
+        .then(async (res) => {
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(data?.error || 'Failed to fetch profile');
+          return data;
+        })
         .then((data) => {
           setFormData({
             name: data.name || '',
@@ -48,6 +52,7 @@ export default function ProfileSettingsPage() {
         })
         .catch((err) => {
           console.error('Failed to fetch profile:', err);
+          setError(err?.message || 'Failed to fetch profile');
         });
     }
   }, [user]);
@@ -77,7 +82,11 @@ export default function ProfileSettingsPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to update profile');
+        const detailsMessage =
+          Array.isArray(data?.details) && data.details.length
+            ? data.details[0]?.message
+            : null;
+        throw new Error(detailsMessage || data.error || 'Failed to update profile');
       }
 
       setSuccess(true);

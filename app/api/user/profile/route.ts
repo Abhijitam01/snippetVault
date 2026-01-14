@@ -3,14 +3,79 @@ import { prisma } from '@/lib/prisma';
 import { getUserFromRequest } from '@/lib/middleware/auth';
 import { z } from 'zod';
 
+const RESERVED_USERNAMES = new Set([
+  'api',
+  'auth',
+  'dashboard',
+  'settings',
+  'snippets',
+  'tags',
+  'categories',
+  'collections',
+  'search',
+  'import',
+  'export',
+  'embed',
+  's',
+]);
+
 const updateProfileSchema = z.object({
-  name: z.string().min(1).max(100).optional(),
-  username: z.string().min(3).max(30).regex(/^[a-zA-Z0-9_]+$/).optional(),
-  bio: z.string().max(500).optional(),
-  avatar: z.string().url().optional().or(z.literal('')),
-  website: z.string().url().optional().or(z.literal('')),
-  githubUrl: z.string().url().optional().or(z.literal('')),
-  twitterUrl: z.string().url().optional().or(z.literal('')),
+  name: z.preprocess(
+    (v) => {
+      if (typeof v !== 'string') return v;
+      const trimmed = v.trim();
+      return trimmed === '' ? null : trimmed;
+    },
+    z.string().min(1).max(100).nullable().optional()
+  ),
+  username: z.preprocess(
+    (v) => {
+      if (typeof v !== 'string') return v;
+      const normalized = v.trim().toLowerCase();
+      return normalized === '' ? undefined : normalized;
+    },
+    z.string().min(3).max(30).regex(/^[a-z0-9_]+$/).optional()
+  ),
+  bio: z.preprocess(
+    (v) => {
+      if (typeof v !== 'string') return v;
+      const trimmed = v.trim();
+      return trimmed === '' ? null : trimmed;
+    },
+    z.string().max(500).nullable().optional()
+  ),
+  avatar: z.preprocess(
+    (v) => {
+      if (typeof v !== 'string') return v;
+      const trimmed = v.trim();
+      return trimmed === '' ? null : trimmed;
+    },
+    z.string().url().nullable().optional()
+  ),
+  website: z.preprocess(
+    (v) => {
+      if (typeof v !== 'string') return v;
+      const trimmed = v.trim();
+      return trimmed === '' ? null : trimmed;
+    },
+    z.string().url().nullable().optional()
+  ),
+  githubUrl: z.preprocess(
+    (v) => {
+      if (typeof v !== 'string') return v;
+      const trimmed = v.trim();
+      return trimmed === '' ? null : trimmed;
+    },
+    z.string().url().nullable().optional()
+  ),
+  twitterUrl: z.preprocess(
+    (v) => {
+      if (typeof v !== 'string') return v;
+      const trimmed = v.trim();
+      return trimmed === '' ? null : trimmed;
+    },
+    z.string().url().nullable().optional()
+  ),
 });
 
 export async function GET(request: NextRequest) {
@@ -71,6 +136,12 @@ export async function PUT(request: NextRequest) {
 
     // Check if username is already taken
     if (validatedData.username) {
+      if (RESERVED_USERNAMES.has(validatedData.username)) {
+        return NextResponse.json(
+          { error: 'This username is reserved' },
+          { status: 400 }
+        );
+      }
       const existingUser = await prisma.user.findUnique({
         where: { username: validatedData.username },
       });
@@ -88,11 +159,11 @@ export async function PUT(request: NextRequest) {
       data: {
         ...(validatedData.name !== undefined && { name: validatedData.name }),
         ...(validatedData.username !== undefined && { username: validatedData.username }),
-        ...(validatedData.bio !== undefined && { bio: validatedData.bio || null }),
-        ...(validatedData.avatar !== undefined && { avatar: validatedData.avatar || null }),
-        ...(validatedData.website !== undefined && { website: validatedData.website || null }),
-        ...(validatedData.githubUrl !== undefined && { githubUrl: validatedData.githubUrl || null }),
-        ...(validatedData.twitterUrl !== undefined && { twitterUrl: validatedData.twitterUrl || null }),
+        ...(validatedData.bio !== undefined && { bio: validatedData.bio }),
+        ...(validatedData.avatar !== undefined && { avatar: validatedData.avatar }),
+        ...(validatedData.website !== undefined && { website: validatedData.website }),
+        ...(validatedData.githubUrl !== undefined && { githubUrl: validatedData.githubUrl }),
+        ...(validatedData.twitterUrl !== undefined && { twitterUrl: validatedData.twitterUrl }),
       },
       select: {
         id: true,
