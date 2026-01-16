@@ -1,14 +1,12 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useMemo, useState, useEffect, useRef } from 'react';
 import TagBadge from '@/components/ui/TagBadge';
 import Button from '@/components/ui/Button';
 import { formatDateTime, getLanguageColor } from '@/lib/utils';
 import type { Snippet } from '@/types';
 import Prism from 'prismjs';
 import { Share2, Copy, Check } from 'lucide-react';
-import { useAuth } from '@/lib/hooks/useAuth';
-import { useRouter } from 'next/navigation';
 import ShareModal from '@/components/ui/ShareModal';
 
 interface SnippetViewerProps {
@@ -23,12 +21,29 @@ interface SnippetViewerProps {
   onEdit?: () => void;
   onDelete?: () => void;
   shareMode?: boolean;
+  variant?: 'full' | 'codeOnly';
 }
 
-export default function SnippetViewer({ snippet, onEdit, onDelete, shareMode = false }: SnippetViewerProps) {
+export default function SnippetViewer({
+  snippet,
+  onEdit,
+  onDelete,
+  shareMode = false,
+  variant = 'full',
+}: SnippetViewerProps) {
   const [copied, setCopied] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const codeRef = useRef<HTMLElement>(null);
+
+  const resources = useMemo(() => {
+    if (!snippet.resources) return [];
+    try {
+      const parsed = JSON.parse(snippet.resources);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }, [snippet.resources]);
 
   useEffect(() => {
     // Dynamically import language components
@@ -113,45 +128,49 @@ export default function SnippetViewer({ snippet, onEdit, onDelete, shareMode = f
 
   return (
     <div className="space-y-6">
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2 font-mono">
-            {snippet.title}
-            {snippet.isFavorite && <span className="ml-2">⭐</span>}
-          </h1>
-          <div className="flex items-center gap-4 text-sm text-gray-500 font-mono">
-            <span
-              className="px-2 py-1 text-xs font-medium rounded font-mono"
-              style={{
-                backgroundColor: `${getLanguageColor(snippet.language)}20`,
-                color: getLanguageColor(snippet.language),
-              }}
-            >
-              {snippet.language}
-            </span>
-            <span>Updated {formatDateTime(snippet.updatedAt)}</span>
+      {variant === 'full' && (
+        <>
+          <div className="flex items-start justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2 font-mono">
+                {snippet.title}
+                {snippet.isFavorite && <span className="ml-2">⭐</span>}
+              </h1>
+              <div className="flex items-center gap-4 text-sm text-gray-500 font-mono">
+                <span
+                  className="px-2 py-1 text-xs font-medium rounded font-mono"
+                  style={{
+                    backgroundColor: `${getLanguageColor(snippet.language)}20`,
+                    color: getLanguageColor(snippet.language),
+                  }}
+                >
+                  {snippet.language}
+                </span>
+                <span>Updated {formatDateTime(snippet.updatedAt)}</span>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              {onEdit && <Button onClick={onEdit}>Edit</Button>}
+              {onDelete && (
+                <Button variant="danger" onClick={onDelete}>
+                  Delete
+                </Button>
+              )}
+            </div>
           </div>
-        </div>
-        <div className="flex gap-2">
-          {onEdit && <Button onClick={onEdit}>Edit</Button>}
-          {onDelete && (
-            <Button variant="danger" onClick={onDelete}>
-              Delete
-            </Button>
+
+          {snippet.description && (
+            <p className="text-gray-700 dark:text-gray-300 font-mono">{snippet.description}</p>
           )}
-        </div>
-      </div>
 
-      {snippet.description && (
-        <p className="text-gray-700 dark:text-gray-300 font-mono">{snippet.description}</p>
-      )}
-
-      {snippet.tags.length > 0 && (
-        <div className="flex flex-wrap gap-2">
-          {snippet.tags.map((tag) => (
-            <TagBadge key={tag.id} tag={tag} />
-          ))}
-        </div>
+          {snippet.tags.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {snippet.tags.map((tag) => (
+                <TagBadge key={tag.id} tag={tag} />
+              ))}
+            </div>
+          )}
+        </>
       )}
 
       <div className="bg-gray-900 rounded-lg p-4 relative">
@@ -189,31 +208,35 @@ export default function SnippetViewer({ snippet, onEdit, onDelete, shareMode = f
         </pre>
       </div>
 
-      {snippet.notes && (
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-          <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">Notes</h3>
-          <p className="text-blue-800 dark:text-blue-200 whitespace-pre-wrap">{snippet.notes}</p>
-        </div>
-      )}
+      {variant === 'full' && (
+        <>
+          {snippet.notes && (
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+              <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">Notes</h3>
+              <p className="text-blue-800 dark:text-blue-200 whitespace-pre-wrap">{snippet.notes}</p>
+            </div>
+          )}
 
-      {snippet.resources && JSON.parse(snippet.resources).length > 0 && (
-        <div>
-          <h3 className="font-semibold mb-2">Resources</h3>
-          <ul className="list-disc list-inside space-y-1">
-            {JSON.parse(snippet.resources).map((url: string, index: number) => (
-              <li key={index}>
-                <a
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline"
-                >
-                  {url}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
+          {resources.length > 0 && (
+            <div>
+              <h3 className="font-semibold mb-2">Resources</h3>
+              <ul className="list-disc list-inside space-y-1">
+                {resources.map((url: string, index: number) => (
+                  <li key={index}>
+                    <a
+                      href={url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline"
+                    >
+                      {url}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </>
       )}
 
       {/* Share Modal */}
@@ -223,6 +246,7 @@ export default function SnippetViewer({ snippet, onEdit, onDelete, shareMode = f
           onClose={() => setShowShareModal(false)}
           shortCode={(snippet as any).shortCode}
           title={snippet.title}
+          username={snippet.user?.username || undefined}
         />
       )}
     </div>

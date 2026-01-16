@@ -9,15 +9,19 @@ interface ShareModalProps {
   onClose: () => void;
   shortCode: string;
   title: string;
+  username?: string;
 }
 
-export default function ShareModal({ isOpen, onClose, shortCode, title }: ShareModalProps) {
+export default function ShareModal({ isOpen, onClose, shortCode, title, username }: ShareModalProps) {
   const [copied, setCopied] = useState(false);
   const [embedCopied, setEmbedCopied] = useState(false);
 
   if (!isOpen) return null;
 
-  const shareUrl = `${window.location.origin}/s/${shortCode}`;
+  const shareUrlBase = `${window.location.origin}/s/${shortCode}`;
+  const shareUrl = username
+    ? `${shareUrlBase}?username=${encodeURIComponent(username)}`
+    : shareUrlBase;
   const embedCode = `<iframe src="${window.location.origin}/embed/${shortCode}" width="100%" height="400" frameborder="0"></iframe>`;
 
   const copyToClipboard = async (text: string, setCopiedFn: (val: boolean) => void) => {

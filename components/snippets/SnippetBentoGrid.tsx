@@ -169,7 +169,11 @@ const SnippetBentoGrid = memo(function SnippetBentoGrid({
                       const shareUrl = snippet.shortCode 
                         ? `${window.location.origin}/s/${snippet.shortCode}`
                         : `${window.location.origin}/snippets/${snippet.id}`;
-                      navigator.clipboard.writeText(shareUrl);
+                      const username = (snippet as any)?.user?.username;
+                      const shareUrlWithUsername = username
+                        ? `${shareUrl}?username=${encodeURIComponent(username)}`
+                        : shareUrl;
+                      navigator.clipboard.writeText(shareUrlWithUsername);
                       toast.success('Link copied to clipboard!', {
                         duration: 2000,
                         style: {

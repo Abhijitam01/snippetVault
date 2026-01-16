@@ -176,7 +176,7 @@ export default async function PublicSnippetPage({ params }: PageProps) {
             </div>
 
             {/* Code Viewer */}
-            <SnippetViewer snippet={snippet} shareMode />
+            <SnippetViewer snippet={snippet} shareMode variant="codeOnly" />
 
             {/* Notes and Resources */}
             {(snippet.notes || snippet.resources) && (
@@ -191,7 +191,14 @@ export default async function PublicSnippetPage({ params }: PageProps) {
                   <div className="rounded-lg border border-white/10 bg-black/40 p-4">
                     <h3 className="text-sm font-semibold text-white mb-2 font-mono">Resources</h3>
                     <ul className="space-y-2">
-                      {JSON.parse(snippet.resources).map((url: string, i: number) => (
+                      {(() => {
+                        try {
+                          const parsed = JSON.parse(snippet.resources);
+                          return Array.isArray(parsed) ? parsed : [];
+                        } catch {
+                          return [];
+                        }
+                      })().map((url: string, i: number) => (
                         <li key={i}>
                           <a
                             href={url}
