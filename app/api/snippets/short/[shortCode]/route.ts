@@ -45,17 +45,32 @@ export async function GET(
       }
     }
 
-    // Increment view count
-    await prisma.snippet.update({
+    // Increment view count and return updated record (so UI isn't stale)
+    const updated = await prisma.snippet.update({
       where: { id: snippet.id },
       data: {
         viewCount: {
           increment: 1,
         },
       },
+      include: {
+        tags: true,
+        user: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+            avatar: true,
+            bio: true,
+            website: true,
+            githubUrl: true,
+            twitterUrl: true,
+          },
+        },
+      },
     });
 
-    return NextResponse.json(snippet);
+    return NextResponse.json(updated);
   } catch (error) {
     console.error('Error fetching snippet by short code:', error);
     return NextResponse.json(

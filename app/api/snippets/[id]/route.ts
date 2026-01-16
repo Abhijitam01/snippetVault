@@ -19,16 +19,28 @@ export async function GET(
       );
     }
 
-    // Increment view count for public/unlisted snippets
+    // Increment view count for public/unlisted snippets and return updated record (so UI isn't stale)
     if (snippet.visibility !== 'private') {
-      await prisma.snippet.update({
+      const updated = await prisma.snippet.update({
         where: { id: params.id },
         data: {
           viewCount: {
             increment: 1,
           },
         },
+        include: {
+          tags: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              username: true,
+              avatar: true,
+            },
+          },
+        },
       });
+      return NextResponse.json(updated);
     }
 
     return NextResponse.json(snippet);
