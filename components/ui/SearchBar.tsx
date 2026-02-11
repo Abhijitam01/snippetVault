@@ -51,7 +51,7 @@ const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
     <div className={className}>
       <form onSubmit={handleSubmit} className="relative">
         <div className="relative flex items-center">
-          <Search className="absolute left-3 w-4 h-4 text-white/40 pointer-events-none" />
+          <Search className="absolute left-3 w-4 h-4 text-gray-400 dark:text-white/40 pointer-events-none" />
           <Input
             ref={ref}
             type="search"
@@ -65,7 +65,7 @@ const SearchBar = forwardRef<HTMLInputElement, SearchBarProps>(
               <button
                 type="button"
                 onClick={handleClear}
-                className="p-1 text-white/40 hover:text-white transition-colors"
+                className="p-1 text-gray-400 dark:text-white/40 hover:text-gray-900 dark:hover:text-white transition-colors"
                 aria-label="Clear search"
               >
                 <X className="w-4 h-4" />

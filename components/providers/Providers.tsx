@@ -3,7 +3,7 @@
 import { ReactNode } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '@/lib/hooks/useAuth';
-import { ThemeProvider } from '@/lib/hooks/useTheme';
+import { ThemeProvider } from 'next-themes';
 
 interface ProvidersProps {
   children: ReactNode;
@@ -11,7 +11,7 @@ interface ProvidersProps {
 
 export default function Providers({ children }: ProvidersProps) {
   return (
-    <ThemeProvider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <AuthProvider>
         {children}
         <Toaster position="top-right" />

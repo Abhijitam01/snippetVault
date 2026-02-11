@@ -102,12 +102,12 @@ const SnippetBentoGrid = memo(function SnippetBentoGrid({
             key={snippet.id}
             className={cn(
               'group relative overflow-hidden rounded-xl border',
-              'bg-gradient-to-br from-black/60 to-black/40 backdrop-blur-sm',
+              'bg-white dark:bg-black/60 backdrop-blur-sm',
               'transition-[transform,border-color,box-shadow] duration-200 ease-out',
               selectionMode
                 ? 'cursor-pointer'
-                : 'hover:scale-[1.01] hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/10',
-              isSelected ? 'border-blue-500 ring-2 ring-blue-500/50' : 'border-white/10',
+                : 'hover:scale-[1.01] hover:border-violet-500/50 hover:shadow-xl hover:shadow-violet-500/10',
+              isSelected ? 'border-violet-500 ring-2 ring-violet-500/50' : 'border-gray-200 dark:border-white/10',
               cardSize
             )}
             onClick={() => {
@@ -128,7 +128,7 @@ const SnippetBentoGrid = memo(function SnippetBentoGrid({
                     }
                   }}
                   onClick={(e) => e.stopPropagation()}
-                  className="h-5 w-5 rounded border-white/20 bg-black/60 text-blue-500 focus:ring-blue-500/60 cursor-pointer"
+                  className="h-5 w-5 rounded border-gray-300 dark:border-white/20 bg-white dark:bg-black/60 text-violet-500 focus:ring-violet-500/60 cursor-pointer"
                 />
               </div>
             )}
@@ -142,7 +142,7 @@ const SnippetBentoGrid = memo(function SnippetBentoGrid({
               }}
             >
             {/* Animated background gradient */}
-            <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-br from-violet-500/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
             
             {/* Language color accent */}
             <div 
@@ -155,7 +155,7 @@ const SnippetBentoGrid = memo(function SnippetBentoGrid({
               <div className="flex items-start justify-between mb-3 gap-3">
                 <div className="flex-1 min-w-0">
                   <h3 className={cn(
-                    'font-semibold text-white group-hover:text-gray-50 transition-colors font-mono truncate',
+                    'font-semibold text-gray-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors font-mono truncate',
                     isLarge ? 'text-xl' : 'text-lg'
                   )}>
                     {snippet.title}
@@ -183,7 +183,7 @@ const SnippetBentoGrid = memo(function SnippetBentoGrid({
                         },
                       });
                     }}
-                    className="p-1.5 rounded-md bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all opacity-0 group-hover:opacity-100 relative z-20"
+                    className="p-1.5 rounded-md bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-500 dark:text-white/60 hover:text-gray-900 dark:hover:text-white transition-all opacity-0 group-hover:opacity-100 relative z-20"
                     title="Share snippet"
                   >
                     <Share2 className="w-4 h-4" />
@@ -207,7 +207,7 @@ const SnippetBentoGrid = memo(function SnippetBentoGrid({
               {/* Description */}
               {snippet.description && (
                 <p className={cn(
-                  'text-white/60 mb-4 group-hover:text-white/80 transition-colors font-mono',
+                  'text-gray-600 dark:text-white/60 mb-4 group-hover:text-gray-900 dark:group-hover:text-white/80 transition-colors font-mono',
                   isLarge ? 'text-sm line-clamp-4' : 'text-sm line-clamp-2'
                 )}>
                   {snippet.description}
@@ -216,8 +216,8 @@ const SnippetBentoGrid = memo(function SnippetBentoGrid({
 
               {/* Code preview for larger cards */}
               {isLarge && snippet.code && (
-                <div className="mb-4 rounded-lg bg-black/60 p-3 border border-white/5">
-                  <pre className="text-xs font-mono text-white/40 overflow-hidden">
+                <div className="mb-4 rounded-lg bg-gray-50 dark:bg-black/60 p-3 border border-gray-200 dark:border-white/5">
+                  <pre className="text-xs font-mono text-gray-500 dark:text-white/40 overflow-hidden">
                     <code className="line-clamp-4">
                       {truncate(snippet.code, 150)}
                     </code>
@@ -232,7 +232,7 @@ const SnippetBentoGrid = memo(function SnippetBentoGrid({
                     <TagBadge key={tag.id} tag={tag} />
                   ))}
                   {snippet.tags.length > (isLarge ? 5 : 3) && (
-                    <span className="inline-flex items-center px-2 py-1 text-xs font-medium text-white/40 bg-white/5 rounded-md border border-white/10 font-mono">
+                    <span className="inline-flex items-center px-2 py-1 text-xs font-medium text-gray-500 dark:text-white/40 bg-gray-100 dark:bg-white/5 rounded-md border border-gray-200 dark:border-white/10 font-mono">
                       +{snippet.tags.length - (isLarge ? 5 : 3)}
                     </span>
                   )}
@@ -240,7 +240,7 @@ const SnippetBentoGrid = memo(function SnippetBentoGrid({
               )}
 
               {/* Footer */}
-              <div className="mt-auto flex items-center justify-between text-xs text-white/50 pt-3 border-t border-white/10 font-mono">
+              <div className="mt-auto flex items-center justify-between text-xs text-gray-400 dark:text-white/50 pt-3 border-t border-gray-100 dark:border-white/10 font-mono">
                 <div className="flex items-center gap-1.5">
                   <Clock className="w-3.5 h-3.5" />
                   <span>{formatDate(snippet.updatedAt)}</span>
@@ -258,7 +258,7 @@ const SnippetBentoGrid = memo(function SnippetBentoGrid({
 
             {/* Shimmer effect on hover */}
             <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none">
-              <div className="h-full w-full bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+              <div className="h-full w-full bg-gradient-to-r from-transparent via-white/10 dark:via-white/5 to-transparent" />
             </div>
             </Link>
           </div>

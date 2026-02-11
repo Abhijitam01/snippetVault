@@ -13,12 +13,12 @@ export default function TagBadge({ tag, onClick, className }: TagBadgeProps) {
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-md px-2.5 py-1 text-xs font-medium font-mono border backdrop-blur-sm transition-all bg-zinc-900/80',
+        'inline-flex items-center rounded-md px-2.5 py-1 text-xs font-medium font-mono border backdrop-blur-sm transition-all bg-white dark:bg-zinc-900/80',
         onClick && 'hover:scale-105 cursor-pointer',
         className
       )}
       style={{
-        borderColor: `${tagColor}60`,
+        borderColor: `${tagColor}20`,
         color: tagColor,
       }}
       onClick={onClick}

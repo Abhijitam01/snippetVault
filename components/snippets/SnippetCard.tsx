@@ -38,21 +38,21 @@ export default function SnippetCard({ snippet }: SnippetCardProps) {
   };
 
   return (
-    <div className="group relative block overflow-hidden rounded-xl border border-white/10 bg-black/40 backdrop-blur-sm p-5 transition-all duration-300 hover:scale-[1.02] hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/20"
+    <div className="group relative block overflow-hidden rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-black/40 backdrop-blur-sm p-5 transition-all duration-300 hover:scale-[1.02] hover:border-violet-500/50 hover:shadow-xl hover:shadow-violet-500/20"
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-white/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-br from-violet-500/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
       
       <Link href={`/snippets/${snippet.id}`} className="absolute inset-0 z-0" />
       
       <div className="relative z-10">
         <div className="flex items-start justify-between mb-3">
-          <h3 className="text-lg font-semibold text-white group-hover:text-gray-50 transition-colors pr-2 font-mono">
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-violet-600 dark:group-hover:text-gray-50 transition-colors pr-2 font-mono">
             {truncate(snippet.title, 40)}
           </h3>
           <div className="flex items-center gap-2 flex-shrink-0">
             <button
               onClick={handleShare}
-              className="p-1.5 rounded-md bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all opacity-0 group-hover:opacity-100 relative z-20"
+              className="p-1.5 rounded-md bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 text-gray-500 dark:text-white/60 hover:text-gray-900 dark:hover:text-white transition-all opacity-0 group-hover:opacity-100 relative z-20"
               title="Share snippet"
             >
               <Share2 className="w-4 h-4" />
@@ -74,7 +74,7 @@ export default function SnippetCard({ snippet }: SnippetCardProps) {
         </div>
 
         {snippet.description && (
-          <p className="text-sm text-white/60 mb-4 line-clamp-2 group-hover:text-white/80 transition-colors font-mono">
+          <p className="text-sm text-gray-600 dark:text-white/60 mb-4 line-clamp-2 group-hover:text-gray-900 dark:group-hover:text-white/80 transition-colors font-mono">
             {truncate(snippet.description, 100)}
           </p>
         )}
@@ -85,14 +85,14 @@ export default function SnippetCard({ snippet }: SnippetCardProps) {
               <TagBadge key={tag.id} tag={tag} />
             ))}
             {snippet.tags.length > 3 && (
-              <span className="inline-flex items-center px-2 py-1 text-xs font-medium text-gray-500 bg-gray-800/50 rounded-md border border-gray-700">
+              <span className="inline-flex items-center px-2 py-1 text-xs font-medium text-gray-500 dark:text-gray-500 bg-gray-100 dark:bg-gray-800/50 rounded-md border border-gray-200 dark:border-gray-700">
                 +{snippet.tags.length - 3}
               </span>
             )}
           </div>
         )}
 
-        <div className="flex items-center text-xs text-white/50 pt-3 border-t border-white/10 font-mono">
+        <div className="flex items-center text-xs text-gray-400 dark:text-white/50 pt-3 border-t border-gray-100 dark:border-white/10 font-mono">
           <div className="flex items-center gap-1.5">
             <Clock className="w-3.5 h-3.5" />
             <span>{formatDate(snippet.updatedAt)}</span>

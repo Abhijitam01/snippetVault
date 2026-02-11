@@ -132,21 +132,19 @@ export default function SnippetViewer({
         <>
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2 font-mono">
+              <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-2 font-mono tracking-tighter">
                 {snippet.title}
-                {snippet.isFavorite && <span className="ml-2">⭐</span>}
+                {snippet.isFavorite && <span className="ml-2 text-yellow-400">★</span>}
               </h1>
-              <div className="flex items-center gap-4 text-sm text-gray-500 font-mono">
+              <div className="flex items-center gap-4 text-xs font-bold text-gray-500 dark:text-gray-400 font-mono uppercase tracking-widest">
                 <span
-                  className="px-2 py-1 text-xs font-medium rounded font-mono"
-                  style={{
-                    backgroundColor: `${getLanguageColor(snippet.language)}20`,
-                    color: getLanguageColor(snippet.language),
-                  }}
+                  className="px-2 py-1 rounded bg-violet-100 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400 border border-violet-200 dark:border-violet-800"
                 >
                   {snippet.language}
                 </span>
-                <span>Updated {formatDateTime(snippet.updatedAt)}</span>
+                <span className="flex items-center gap-1 opacity-70">
+                  Updated {formatDateTime(snippet.updatedAt)}
+                </span>
               </div>
             </div>
             <div className="flex gap-2">
@@ -160,7 +158,7 @@ export default function SnippetViewer({
           </div>
 
           {snippet.description && (
-            <p className="text-gray-700 dark:text-gray-300 font-mono">{snippet.description}</p>
+            <p className="text-lg text-gray-600 dark:text-gray-300 font-mono leading-relaxed border-l-4 border-violet-500/20 pl-4 py-1">{snippet.description}</p>
           )}
 
           {snippet.tags.length > 0 && (
@@ -173,14 +171,14 @@ export default function SnippetViewer({
         </>
       )}
 
-      <div className="bg-gray-900 rounded-lg p-4 relative">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-gray-400 font-mono">{snippet.language}</span>
+      <div className="bg-zinc-950 dark:bg-black rounded-xl border border-gray-200 dark:border-white/10 overflow-hidden relative shadow-2xl">
+        <div className="flex items-center justify-between px-4 py-3 bg-gray-50 dark:bg-zinc-900/50 border-b border-gray-200 dark:border-white/10">
+          <span className="text-xs font-bold text-gray-500 dark:text-gray-400 font-mono uppercase tracking-widest">{snippet.language}</span>
           <div className="flex items-center gap-2">
             {shareMode && (
               <button
                 onClick={openShareModal}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-mono bg-white/5 text-white/70 border border-white/10 hover:bg-white/10 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold font-mono uppercase tracking-tight bg-white dark:bg-white/5 text-gray-600 dark:text-white/70 border border-gray-200 dark:border-white/10 hover:bg-gray-50 dark:hover:bg-white/10 transition-all active:scale-95"
               >
                 <Share2 className="w-4 h-4" />
                 <span>Share</span>
@@ -211,25 +209,29 @@ export default function SnippetViewer({
       {variant === 'full' && (
         <>
           {snippet.notes && (
-            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-              <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">Notes</h3>
-              <p className="text-blue-800 dark:text-blue-200 whitespace-pre-wrap">{snippet.notes}</p>
+            <div className="bg-violet-50 dark:bg-violet-500/10 border border-violet-100 dark:border-violet-500/20 rounded-xl p-6 relative overflow-hidden group">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-violet-500/5 blur-3xl rounded-full -mr-16 -mt-16 group-hover:bg-violet-500/10 transition-colors duration-500"></div>
+              <h3 className="text-sm font-bold text-violet-900 dark:text-violet-400 mb-2 font-mono uppercase tracking-widest">Notes</h3>
+              <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap font-mono relative z-10">{snippet.notes}</p>
             </div>
           )}
 
           {resources.length > 0 && (
-            <div>
-              <h3 className="font-semibold mb-2">Resources</h3>
-              <ul className="list-disc list-inside space-y-1">
+            <div className="space-y-4">
+              <h3 className="text-sm font-bold text-gray-900 dark:text-white font-mono uppercase tracking-widest">Related Resources</h3>
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {resources.map((url: string, index: number) => (
                   <li key={index}>
                     <a
                       href={url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-600 hover:underline"
+                      className="flex items-center gap-3 p-3 rounded-lg border border-gray-100 dark:border-white/5 bg-gray-50/50 dark:bg-white/5 hover:border-violet-500/50 hover:bg-violet-50 dark:hover:bg-violet-500/10 transition-all group"
                     >
-                      {url}
+                      <Share2 className="w-4 h-4 text-gray-400 group-hover:text-violet-500" />
+                      <span className="text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white font-mono truncate">
+                        {url.replace(/^https?:\/\//, '')}
+                      </span>
                     </a>
                   </li>
                 ))}

@@ -11,10 +11,10 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const baseStyles = 'inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 font-mono';
     
     const variants = {
-      primary: 'bg-blue-600 text-white hover:bg-blue-700 border border-blue-500 focus-visible:ring-blue-500',
-      secondary: 'bg-white/10 text-white border border-white/20 hover:bg-white/20 focus-visible:ring-white/50',
-      outline: 'border border-white/20 bg-transparent text-white hover:border-blue-500 hover:bg-blue-500/10 focus-visible:ring-blue-500',
-      ghost: 'text-white hover:bg-white/10 focus-visible:ring-white/50',
+      primary: 'bg-violet-600 text-white hover:bg-violet-700 border border-violet-500 focus-visible:ring-violet-500',
+      secondary: 'bg-gray-100 dark:bg-white/10 text-gray-900 dark:text-white border border-gray-200 dark:border-white/20 hover:bg-gray-200 dark:hover:bg-white/20 focus-visible:ring-violet-500',
+      outline: 'border border-gray-200 dark:border-white/20 bg-transparent text-gray-700 dark:text-white hover:border-violet-500 hover:bg-violet-500/10 focus-visible:ring-violet-500',
+      ghost: 'text-gray-600 dark:text-white hover:bg-gray-100 dark:hover:bg-white/10 focus-visible:ring-violet-500',
       danger: 'bg-red-600 text-white hover:bg-red-700 border border-red-500 focus-visible:ring-red-500',
     };
 
@@ -37,4 +37,3 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = 'Button';
 
 export default Button;
-

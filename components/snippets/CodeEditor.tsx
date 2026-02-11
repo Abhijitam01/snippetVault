@@ -12,7 +12,7 @@ const CodeMirror = dynamic(() => import('@uiw/react-codemirror'), {
     </div>
   ),
 });
-import { useTheme } from '@/lib/hooks/useTheme';
+import { useTheme } from 'next-themes';
 
 interface CodeEditorProps {
   value: string;

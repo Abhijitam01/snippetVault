@@ -92,11 +92,11 @@ export default function Header({ onSearch, searchInputRef }: HeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-black/80 backdrop-blur-md">
+    <header className="sticky top-0 z-40 w-full border-b border-gray-200 dark:border-white/10 bg-white/80 dark:bg-black/80 backdrop-blur-md transition-colors duration-300">
       <div className="flex h-14 items-center justify-between gap-2 px-4 sm:px-6 mx-auto w-full max-w-6xl">
         <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
-          <Link href="/dashboard" className="flex sm:flex items-center gap-2 text-sm font-mono text-white/70 hover:text-white transition-colors flex-shrink-0">
-            <Logo size={18} />
+          <Link href="/dashboard" className="flex sm:flex items-center gap-2 text-sm font-mono text-gray-600 dark:text-white/70 hover:text-gray-900 dark:hover:text-white transition-colors flex-shrink-0">
+            <Logo size={18} className="text-gray-900 dark:text-white" />
             <span className="hidden md:inline">SnippetVault</span>
           </Link>
           <div className="flex-1 max-w-xl">
@@ -107,15 +107,13 @@ export default function Header({ onSearch, searchInputRef }: HeaderProps) {
           {user && (
             <Link 
               href="/settings/profile"
-              className="hidden lg:block text-xs font-mono text-white/50 hover:text-white/80 transition-colors cursor-pointer"
+              className="hidden lg:block text-xs font-mono text-gray-500 dark:text-white/50 hover:text-gray-900 dark:hover:text-white/80 transition-colors cursor-pointer"
             >
               {user.email}
             </Link>
           )}
-          <div className="flex items-center gap-1 sm:gap-2">
-            <div className="hidden sm:block">
-              <ThemeToggle />
-            </div>
+          <div className="flex items-center gap-3">
+             <ThemeToggle />
             <Button variant="outline" size="sm" onClick={handleExport} className="hidden md:flex">
               Export
             </Button>

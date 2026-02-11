@@ -31,9 +31,9 @@ export default function NewSnippetPage() {
   return (
     <MainLayout onSearch={() => {}}>
       <div className="max-w-4xl mx-auto space-y-6">
-        <div>
-          <h1 className="text-2xl font-semibold text-white">New snippet</h1>
-          <p className="mt-1 text-sm text-white/60">Save a reusable piece of code to your vault.</p>
+        <div className="py-2">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white font-mono tracking-tight">New snippet</h1>
+          <p className="mt-1 text-sm text-gray-500 dark:text-white/60 font-mono">Save a reusable piece of code to your vault.</p>
         </div>
         <SnippetForm
           tags={tags}
